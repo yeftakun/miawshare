@@ -160,19 +160,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
 <header>
-    <div class="logo">
-        <img src="../../assets/ico/HitoriGotou.ico" alt="logo" width="50">
-    </div>
-    <div class="profile-pic">
-        <a href="../profile.php?user_name=<?php echo $userData['user_name']; ?>">   
-            <?php
-            echo '<img src="../../storage/profile/' . $userData['user_profile_path'] . '" alt="' . $userData['user_profile_path'] . '" width="50px"';
-            ?>
-        </a>
-    </div>
-    <div class="logout">
-        <a href="../../logout.php">LOGOUT</a>
-    </div>
+                        <div class="logo">
+                            <img src="../../assets/ico/HitoriGotou.ico" alt="logo" width="50">
+                        </div>
+                        <div class="home-search-bar">
+                            <form action="search_result.php" method="GET">
+                                <input type="text" name="search" id="searchInput" placeholder="Judul / #tag / username">
+                                <input type="submit" value="Search">
+                            </form>
+                        </div>
+                        <div class="nav-to">
+                            <p><a href="../beranda.php">Beranda</a></p>
+                        </div>
+                        <div class="nav-to">
+                            <p><a href="../post.php">
+                                <?php
+                                if ($_SESSION['level_id'] == 1) {
+                                    echo 'Admin Panel';
+                                } else {
+                                    echo 'Posting';
+                                }
+                                ?>
+                            </a></p>
+                        </div>
+                        <div class="profile-pic">
+                            <a href="profile.php?user_name=<?php echo $_SESSION['user_name']; ?>">
+                                <?php
+                                echo '<img src="../../storage/profile/' . $_SESSION['user_profile_path'] . '" alt="' . $_SESSION['user_profile_path'] . '" width="50px"';
+                            ?>
+                            </a>
+                        </div>
+                        <div class="logout">
+                            <a href="../../logout.php">LOGOUT</a>
+                        </div>
 </header>
 
 <div class="container">
@@ -196,6 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 	}
     ?>
+    <a href="../profile.php">Kembali</a>
     <form method="POST" enctype="multipart/form-data">
         <h3>User Info</h3>
         <!-- <label for="image" class="uploadimg">Ganti Foto</label>
