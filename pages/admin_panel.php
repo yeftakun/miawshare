@@ -127,18 +127,18 @@ if(isset($_SESSION['level_id'])) {
                     echo "<tr>";
                     echo "<th>ID</th>";
                     echo "<th>Name</th>";
-                    echo "<th>Control</th>";
+                    // echo "<th>Control</th>";
                     echo "</tr>";
 
                     while($rowLevel = mysqli_fetch_assoc($resultLevel)) {
                         echo "<tr>";
                         echo "<td>".$rowLevel['level_id']."</td>";
                         echo "<td>".$rowLevel['level_name']."</td>";
-                        echo "<td>";
-                        // echo "<a href='crud/edit_data.php?page=level&id=".$rowLevel['level_id']."'>Edit</a> | ";
-                        // Tambahkan tombol delete dengan atribut data-id
-                        echo "<a class='deleteBtn' data-id='".$rowLevel['level_id']."' data-page='level'>Delete</a>";
-                        echo "</td>";
+                        // echo "<td>";
+                        // // echo "<a href='crud/edit_data.php?page=level&id=".$rowLevel['level_id']."'>Edit</a> | ";
+                        // // Tambahkan tombol delete dengan atribut data-id
+                        // echo "<a class='deleteBtn' data-id='".$rowLevel['level_id']."' data-page='level'>Delete</a>";
+                        // echo "</td>";
                         echo "</tr>";
                     }
                 } else {
