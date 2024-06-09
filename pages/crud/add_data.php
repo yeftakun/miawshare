@@ -66,11 +66,15 @@ if (isset($_SESSION['level_id'])) {
                             // Membuat OTP 6 digit acak
                             $otp = mt_rand(100000, 999999);
 
-                            $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=Halo,%20$name!.%0AKode%20OTP%20anda%20adalah:%20`$otp`";
-
-
+                            $telegramAPIOTP = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=Halo,%20$name!.%0AKode%20OTP%20anda%20adalah:%20`$otp`";
                             // Mengirimkan OTP ke pengguna melalui Telegram
-                            file_get_contents($telegramAPI);
+                            $ch = curl_init();
+                            // Set opsi cURL
+                            curl_setopt($ch, CURLOPT_URL, $telegramAPIOTP);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_exec($ch);
+                            // Tutup cURL
+                            curl_close($ch);
 
                             // Memasukkan user_name dan otp ke dalam tabel otp
                             $queryInsertOtp = "INSERT INTO otp (user_name, otp_code, to_use) VALUES ('$user_name', '$otp', 'register')";
@@ -100,6 +104,13 @@ if (isset($_SESSION['level_id'])) {
                 // add data users
                 ?>
                 <h3>Add Users page</h3> 
+                <?php
+                if (isset($_GET['pesan'])) {
+                    if ($_GET['pesan'] == 'chatidused') {
+                        echo "<div class='alert'>ChatID sudah digunakan</div>";
+                    }
+                }
+                ?>
                 <p><a href="../admin_panel.php">Kembali</a></p>
                 <?php
 
@@ -111,25 +122,66 @@ if (isset($_SESSION['level_id'])) {
                     $level_id = $_POST['level_id'];
                     $status = 'Aktif'; // Akun yang ditambahkan admin dapat langsung dipakai user.
                     $defaultImage = 'default.png';
-
-                    // cek apakah user_name sudah ada
-                    $queryCheckUsername = "SELECT COUNT(user_name) AS total FROM users WHERE user_name = '$user_name'";
-                    $resultCheckUsername = mysqli_query($koneksi, $queryCheckUsername);
-                    $row = mysqli_fetch_assoc($resultCheckUsername);
-                    $totalUsername = $row['total'];
-
-                    if ($totalUsername > 0) {
-                        echo "<div class='alert'>Username sudah ada</div>";
+                    $chatID = $_POST['chatID'];
+                    
+                    // Cek apakah ada chatID yang diinputkan
+                    if (empty($_POST['chatID'])) {
+                        $chatID = "0";
                     } else {
-                        $insertQuery = "INSERT INTO users (user_name, name, user_bio, password, level_id, status, user_profile_path) VALUES ('$user_name', '$name', '$bio', '$password', '$level_id', '$status', '$defaultImage')";
-                        $result = mysqli_query($koneksi, $insertQuery);
+                        $chatID = $_POST['chatID'];
+                    }
+                        // Query untuk mendapatkan data dan cek apakah ChatID sudah digunakan oleh pengguna lain
+                        $queryCheckChatID = "SELECT tele_chat_id FROM users WHERE tele_chat_id = $chatID";
+                        $resultCheckChatID = mysqli_query($koneksi, $queryCheckChatID);
+                        // $countChatID = mysqli_num_rows($resultCheckChatID);
+                        
+                        // Jika chatID yang dicari adalah 0, maka ubah $countChatID menjadi 0
+                        if ($chatID == 0) {
+                            $countChatID = 0;
+                        }else{
+                            $countChatID = mysqli_num_rows($resultCheckChatID);
+                        }
+                        if ($countChatID > 0) {
+                            header("location:add_data.php?page=$page&pesan=chatidused"); // ChatID sudah digunakan maka kembali ke halaman admin_panel
+                            exit();
+                        }
 
-                        if ($result) {
-                            header("location:../admin_panel.php?pesan=successadduser");
+                        // cek apakah user_name sudah ada
+                        $queryCheckUsername = "SELECT COUNT(user_name) AS total FROM users WHERE user_name = '$user_name'";
+                        $resultCheckUsername = mysqli_query($koneksi, $queryCheckUsername);
+                        $row = mysqli_fetch_assoc($resultCheckUsername);
+                        $totalUsername = $row['total'];
+
+                        if ($totalUsername > 0) {
+                            echo "<div class='alert'>Username sudah ada</div>";
                         } else {
-                            header("location:add_data.php?page=users&pesan=failedadduser");
+                            $insertQuery = "INSERT INTO users (user_name, name, user_bio, password, level_id, status, user_profile_path, tele_chat_id) VALUES ('$user_name', '$name', '$bio', '$password', '$level_id', '$status', '$defaultImage', '$chatID')";
+                            $result = mysqli_query($koneksi, $insertQuery);
+
+                            if ($chatID != 0) {
+                                // kirim notifikasi ke telegram
+                                $queryTelegramID = "SELECT tele_chat_id FROM users WHERE user_name = '$user_name'";
+                                $resultTelegramID = mysqli_query($koneksi, $queryTelegramID);
+                                $rowTelegramID = mysqli_fetch_assoc($resultTelegramID);
+                                $teleChatID = $rowTelegramID['tele_chat_id'];
+                                
+                                $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=**Selamat%20datang%20di%20aplikasi%20kami,%20$name!**%0AAkun%20anda%20telah%20dibuat%20oleh%20admin%20dengan%20level%20$level_id.%0A%0AAnda%20dapat%20login%20dengan%0AUsername:%20`$user_name`%0APassword:%20`$password`.%0AAnda%20menerima%20pesan%20ini%20karena%20ChatID%20anda%20($chatID)%20terdaftar%20di%20sistem%20kami.";
+
+                                $ch = curl_init();
+                                // Set opsi cURL
+                                curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                curl_exec($ch);
+                                // Tutup cURL
+                                curl_close($ch);
+
+                                header("location:../admin_panel.php?pesan=successadduser");
+                            } else {
+                                header("location:../admin_panel.php?pesan=successadduser");
+                            }
                         }
                     }
+
 
                 }
                 ?>
@@ -139,7 +191,7 @@ if (isset($_SESSION['level_id'])) {
                     <label for="name">Name</label>
                     <input type="text" name="name" required>
                     <label for="bio">Bio</label>
-                    <textarea name="bio" type="text" placeholder="Bio user"></textarea>
+                    <textarea name="bio" type="text" placeholder="Bio user" require></textarea>
                     <label for="password">Password</label>
                     <input type="password" name="password" required>
                     <label for="level_id">Level</label>
@@ -147,6 +199,8 @@ if (isset($_SESSION['level_id'])) {
                         <option value="1">Admin</option>
                         <option value="2">User</option>
                     </select>
+                    <label for="chatID">ChatID</label>
+                    <input type="number" name="chatID" value=0>
                     <input type="submit" value="Add User">
                 <?php
         } else {
@@ -155,7 +209,6 @@ if (isset($_SESSION['level_id'])) {
     } else {
     header("location:../error/deniedpage.php");
     // header("location:../../index.php?pesan=needlogin");
-}
 }
 }
 ?>

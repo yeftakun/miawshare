@@ -79,7 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Query untuk memperbarui data pengguna
-        $queryUpdateUser = "UPDATE users SET name = '$name', user_name = '$username', user_bio = '$user_bio', user_profile_path = '$user_profile_path' WHERE user_id = " . $_SESSION['user_id'];
+        // $queryUpdateUser = "UPDATE users SET name = '$name', user_name = '$username', user_bio = '$user_bio', user_profile_path = '$user_profile_path' WHERE user_id = " . $_SESSION['user_id'];
+        $queryUpdateUser = "UPDATE users SET name = '$name', user_name = '$username', user_bio = '$user_bio', user_profile_path = 'default.png' WHERE user_id = " . $_SESSION['user_id'];
 
         // Eksekusi query
         $resultUpdateUser = mysqli_query($koneksi, $queryUpdateUser);
@@ -119,7 +120,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$teleChatID&text=Password%20anda%20berhasil%20diubah.%0AJika%20anda%20tidak%20melakukan%20perubahan%20password,%20silahkan%20hubungi%20admin.";
 
                     // Kirim pesan ke Telegram
-                    file_get_contents($telegramAPI);
+                    $ch = curl_init();
+                    // Set opsi cURL
+                    curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_exec($ch);
+                    // Tutup cURL
+                    curl_close($ch);
 
                     // Redirect ke halaman profile setelah password diperbarui
                     header("location:edit_profile.php?pesan=resetpasswordsuccess");

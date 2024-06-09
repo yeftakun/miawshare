@@ -204,6 +204,12 @@ $result = mysqli_query($koneksi, $query);
             <p>Unggahan Terbaru</p>
 
             <?php
+            
+            if(isset($_GET['pesan'])){
+                if($_GET['pesan']=="selflevelchanged"){
+                    echo "<div class='done'>Anda logout karena anda tidak memiliki hak admin lagi</div>";
+                }
+            }
             if (mysqli_num_rows($result) > 0) {
                 // Loop untuk menampilkan setiap data gambar dan informasi pengguna
                 while ($row = mysqli_fetch_assoc($result)) {

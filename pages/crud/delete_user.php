@@ -48,7 +48,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_profile_path = $rowProfilePath['user_profile_path'];
             unlink("../../storage/profile/$user_profile_path");
 
-            file_get_contents($telegramAPI); // kirim notifikasi ke telegram
+            $ch = curl_init();
+            // Set opsi cURL
+            curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_exec($ch);
+            // Tutup cURL
+            curl_close($ch);
             
             // Hapus akun dari tabel users
             $queryDeleteUser = "DELETE FROM users WHERE user_id = $user_id";

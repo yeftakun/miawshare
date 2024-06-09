@@ -84,6 +84,11 @@ if(isset($_SESSION['level_id'])) {
                 </div>";
             }
         }
+        if (isset($_GET['pesan'])) {
+            if ($_GET['pesan'] == "chatidused") {
+                echo "<div class='alert'>Chat ID sudah digunakan oleh pengguna lain.</div>";
+            }
+        }
         if(isset($_GET['pesan'])) {
             if($_GET['pesan'] == "successupdateusers") {
                 echo "<div class='done'>
@@ -95,6 +100,13 @@ if(isset($_SESSION['level_id'])) {
             if($_GET['pesan'] == "trash_file_deleted") {
                 echo "<div class='done'>
                     File tidak berguna sudah dihapus.
+                </div>";
+            }
+        }
+        if(isset($_GET['pesan'])) {
+            if($_GET['pesan'] == "successadduser") {
+                echo "<div class='done'>
+                    Berhasil menambahkan user.
                 </div>";
             }
         }

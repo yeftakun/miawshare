@@ -54,7 +54,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$teleChatID&text=Kode%20OTP%20Regis:%20`$generatedCode`";
 
             // Kirim pesan ke Telegram
-            file_get_contents($telegramAPI);
+            $ch = curl_init();
+            // Set opsi cURL
+            curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_exec($ch);
+            // Tutup cURL
+            curl_close($ch);
 
             // Fungsi untuk mendapatkan ekstensi file
             function getFileExtension($filename) {
