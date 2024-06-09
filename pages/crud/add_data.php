@@ -165,7 +165,9 @@ if (isset($_SESSION['level_id'])) {
                                 $rowTelegramID = mysqli_fetch_assoc($resultTelegramID);
                                 $teleChatID = $rowTelegramID['tele_chat_id'];
                                 
-                                $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=**Selamat%20datang%20di%20aplikasi%20kami,%20$name!**%0AAkun%20anda%20telah%20dibuat%20oleh%20admin%20dengan%20level%20$level_id.%0A%0AAnda%20dapat%20login%20dengan%0AUsername:%20`$user_name`%0APassword:%20`$password`.%0AAnda%20menerima%20pesan%20ini%20karena%20ChatID%20anda%20($chatID)%20terdaftar%20di%20sistem%20kami.";
+                                // format name
+                                $nameFormated = str_replace(' ', '%20', $name);
+                                $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=**Selamat%20datang%20di%20aplikasi%20kami,%20$nameFormated!**%0AAkun%20anda%20telah%20dibuat%20oleh%20admin%20dengan%20level%20$level_id.%0A%0AAnda%20dapat%20login%20dengan%0AUsername:%20`$user_name`%0APassword:%20`$password`.%0AAnda%20menerima%20pesan%20ini%20karena%20ChatID%20anda%20($chatID)%20terdaftar%20di%20sistem%20kami.";
 
                                 $ch = curl_init();
                                 // Set opsi cURL

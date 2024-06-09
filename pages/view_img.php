@@ -189,7 +189,15 @@ if ($row > 0) {
                             <p><a href="beranda.php">Beranda</a></p>
                         </div>
                         <div class="nav-to">
-                            <p><a href="post.php">Posting</a></p>
+                            <p><a href="post.php">
+                                <?php
+                                if ($_SESSION['level_id'] == 1) {
+                                    echo 'Admin Panel';
+                                } else {
+                                    echo 'Posting';
+                                }
+                                ?>
+                            </a></p>
                         </div>
                         <div class="profile-pic">
                             <a href="profile.php?user_name=<?php echo $_SESSION['user_name']; ?>">
