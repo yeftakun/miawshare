@@ -51,262 +51,235 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View Image</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/alert.css">
-    <style>
-        /* CSS */
-        .modal-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Transparan */
-            z-index: 999; /* Pastikan modal muncul di atas konten */
-        }
-
-        .modal {
-            background-color: #fefefe;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        .close {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            cursor: pointer;
-        }
-
-    </style>
+    <!-- <link rel="stylesheet" href="../css/style.css"> -->
+    <link rel="stylesheet" href="../styles/alert.css">
+    <link rel="stylesheet" href="../styles/image.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/modal-view-img.css">
+    <link rel="icon" type="image/png" href="../assets/logo/logo.png" />
+    <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="../script/script.js" defer></script> 
 </head>
 <body>
-    
+    <br><br><br><br>
     <?php
 
 // Pastikan ada hasil yang ditemukan
 if ($row > 0) {
-    // cek jika sudah login
-        if (isset($_SESSION['user_name'])) {
-            // cek apakah user yang login sama dengan user yang upload
-            if ($_SESSION['user_name'] == $row['user_name']) {
-                // tampilan gambar yang diupload user sendiri
-                ?>
-                <header>
-                        <div class="logo">
-                            <img src="../assets/ico/HitoriGotou.ico" alt="logo" width="50">
-                        </div>
-                        <div class="home-search-bar">
-                            <form action="search_result.php" method="GET">
-                                <input type="text" name="search" id="searchInput" placeholder="Judul / #tag / username">
-                                <input type="submit" value="Search">
-                            </form>
-                        </div>
-                        <div class="nav-to">
-                            <p><a href="beranda.php">Beranda</a></p>
-                        </div>
-                        <div class="nav-to">
-                            <p><a href="post.php">Posting</a></p>
-                        </div>
-                        <div class="profile-pic">
-                            <a href="profile.php?user_name=<?php echo $_SESSION['user_name']; ?>">
-                                <?php
-                                echo '<img src="../storage/profile/' . $_SESSION['user_profile_path'] . '" alt="' . $_SESSION['user_profile_path'] . '" width="50px"';
-                            ?>
-                            </a>
-                        </div>
-                        <div class="logout">
-                            <a href="../logout.php">LOGOUT</a>
-                        </div>
-                    </header>
-                    <div class="container">
-                        <div class="box">
-                            <!-- Tampilkan gambar dari direktori "../storage/posting/" -->
-                            <div class="img-preview">
-                                <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
-                            </div>
-                            <div class="control">
-                                <p>
-                                    <a href="beranda.php">Kembali</a> | 
-                                    <a href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>Download</a> | 
-                                    <a href="#" id="copyButton" class="copyButton">Copy URL</a> | 
-                                    <a href="#" onclick="showConfirmationModal()">Delete</a>
-                                </p>
-                            </div>
-
-                            <!-- Modal container -->
-                            <div id="modalContainer" class="modal-container" style="display: none;">
-                                <!-- Modal konfirmasi penghapusan -->
-                                <div id="confirmationModal" class="modal">
-                                    <div class="modal-content">
-                                        <span class="close" onclick="closeConfirmationModal()">&times;</span>
-                                        <p>Apakah Anda yakin ingin menghapus gambar ini?</p>
-                                        <div class="button-container">
-                                            <button onclick="deleteImage()">Ya</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>  
-
-
-                            <div class="img-attribute">
-                                <h2><?php echo $row['post_title']; ?></h2>
-                                <p><?php echo $timeAgo; ?></p>
-                                <p><?php echo $row['post_description']; ?></p>
-                                <div class="posted-by">
-                                    <!-- Tampilkan foto profil dari direktori "../storage/profile/" -->
-                                    <a href="<?php echo 'profile.php?user_name=' . $row['user_name']; ?>">
-                                        <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="pp" width="50px">
-                                        <p><?php echo $row['name']; ?></p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+    ?>
+    <div class="container">
+        <div class="content-card">
+            <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>" class="content-image">
+            <div class="card-details">
+                <a href="<?php echo 'profile.php?user_name=' . $row['user_name']; ?>">
+                <div class="user-info">
+                        <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="pp" class="user-photo">
+                        <span class="username"><?php echo $row['user_name']; ?></span>
                     </div>
+                </a>
+                <h2 class="content-title"><?php echo $row['post_title']; ?></h2>
+                <p class="content-description"><?php echo $row['post_description']; ?></p>
+                <div class="button-group">
                     <?php
-                echo '<h1>Ini gambar yang diupload oleh Anda sendiri</h1>';
-            } else {
-                // tampilan gambar yang diupload user lain
-                ?>
-                    <header>
-                        <div class="logo">
-                            <img src="../assets/ico/HitoriGotou.ico" alt="logo" width="50">
-                        </div>
-                        <div class="home-search-bar">
-                            <form action="search_result.php" method="GET">
-                                <input type="text" name="search" id="searchInput" placeholder="Judul / #tag / username">
-                                <input type="submit" value="Search">
-                            </form>
-                        </div>
-                        <div class="nav-to">
-                            <p><a href="beranda.php">Beranda</a></p>
-                        </div>
-                        <div class="nav-to">
-                            <p><a href="post.php">
-                                <?php
-                                if ($_SESSION['level_id'] == 1) {
-                                    echo 'Admin Panel';
-                                } else {
-                                    echo 'Posting';
-                                }
-                                ?>
-                            </a></p>
-                        </div>
-                        <div class="profile-pic">
-                            <a href="profile.php?user_name=<?php echo $_SESSION['user_name']; ?>">
-                                <?php
-                                echo '<img src="../storage/profile/' . $_SESSION['user_profile_path'] . '" alt="' . $_SESSION['user_profile_path'] . '" width="50px"';
-                            ?>
-                            </a>
-                        </div>
-                        <div class="logout">
-                            <a href="../logout.php">LOGOUT</a>
-                        </div>
-                    </header>
-                    <div class="container">
-                        <div class="box">
-                            <!-- Tampilkan gambar dari direktori "../storage/posting/" -->
-                            <div class="img-preview">
-                                <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
-                            </div>
-                            <div class="control">
-                                <p><a href="beranda.php">Kembali</a> | 
-                                <a href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>
-                                    Download
-                                </a> | 
-                                <a href="#" id="copyButton" class="copyButton">Copy URL</a>
-                            </div>
-                            <div class="img-attribute">
-                                <h2><?php echo $row['post_title']; ?></h2>
-                                <p><?php echo $timeAgo; ?></p>
-                                <p><?php echo $row['post_description']; ?></p>
-                                <div class="posted-by">
-                                    <!-- Tampilkan foto profil dari direktori "../storage/profile/" -->
-                                    <a href="<?php echo 'profile.php?user_name=' . $row['user_name']; ?>">
-                                        <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="pp" width="50px">
-                                        <p><?php echo $row['name']; ?></p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                <?php
-                echo '<h1>Ini gambar yang diupload oleh user lain</h1>';
-            }
-        } else {
-            // tampilan jika pengguna belum login
-            echo '<h1>Ini gambar yang diupload oleh user lain, tapi anda belum login</h1>';
-            ?>
-            <header>
-                <div class="logo">
-                    <img src="../assets/ico/HitoriGotou.ico" alt="logo" width="50">
+                    if (isset($_SESSION['user_name']) && $_SESSION['user_name'] == $row['user_name']) {
+                        ?>
+                        <button class="delete-button" onclick="showConfirmationModal()"><i class='bx bx-trash' ></i></button>
+                        <?php
+                    }
+                    ?>
+                    <a class="download-button" href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>Download Image</a>
+                    <button class="copy-link-button" id="copyButton"><i class='bx bx-link-alt'></i></button>
                 </div>
-                <div class="home-search-bar">
-                    <form action="search_result.php" method="GET">
-                        <input type="text" name="search" id="searchInput" placeholder="Judul / #tag / username">
-                        <input type="submit" value="Search">
-                    </form>
-                </div>
-                <div class="nav-to">
-                    <p><a href="beranda.php">Beranda</a></p>
-                </div>
-                <div class="nav-to">
-                    <p>
-                        <a href="../index.php">LOGIN</a>
-                    </p>
-                </div>
-            </header>
-            <div class="container">
-                <div class="box">
-                    <!-- Tampilkan gambar dari direktori "../storage/posting/" -->
-                    <div class="img-preview">
-                        <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
-                    </div>
-                    <div class="control">
-                        <p><a href="beranda.php">Kembali</a> | 
-                        <a href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>
-                            Download
-                        </a> | 
-                        <a href="#" id="copyButton" class="copyButton">Copy URL</a>
-                    </div>
-                    <div class="img-attribute">
-                        <h2><?php echo $row['post_title']; ?></h2>
-                        <p><?php echo $timeAgo; ?></p>
-                        <p><?php echo $row['post_description']; ?></p>
-                            <div class="posted-by">
-                            <!-- Tampilkan foto profil dari direktori "../storage/profile/" -->
-                            <a href="<?php echo 'profile.php?user_name=' . $row['user_name']; ?>">
-                                <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="pp" width="50px">
-                                <p><?php echo $row['name']; ?></p>
-                            </a>
+            </div>
+            <button class="undo-button" id="undoButton"><i class='bx bxs-chevron-left'></i></button>
+            </div>
+            </div>
+            
+            <!-- Modal container -->
+            <div id="modalContainer" class="modal-container" style="display: none;">
+                <!-- Modal konfirmasi penghapusan -->
+                <div id="confirmationModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeConfirmationModal()">&times;</span>
+                        <p>Apakah Anda yakin ingin menghapus gambar ini?</p>
+                        <div class="button-container">
+                            <button onclick="deleteImage()">Ya</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar locked">
+            <div class="logo_items flex">
+            <span class="nav_image">
+                <img src="../assets/logo/logo.png" alt="logo_img" />
+            </span>
+            <span class="logo_name">MiawShare</span>
+            <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
+            </div>
+
+            <div class="menu_container">
+            <div class="menu_items">
+                <ul class="menu_item">
+                    <div class="menu_title flex">
+                    <span class="title">Dashboard</span>
+                    <span class="line"></span>
+                    </div>
+                    <li class="item">
+                        <a href="beranda.php" class="link flex">
+                    <i class="bx bx-home-alt"></i>
+                    <span>Beranda</span>
+                    </a>
+                </li>
+                </ul>
+                <?php
+                if(isset($_SESSION['level_id'])) {
+                ?>
+                <ul class="menu_item">
+                <div class="menu_title flex">
+                    <span class="title">Tools</span>
+                    <span class="line"></span>
+                </div>  
+                <li class="item">
+                    <?php
+                    if($_SESSION['level_id'] == 1) {
+                    ?>
+                        <a href="admin_panel.php" class="link flex">
+                        <i class="bx bx-cog"></i>
+                        <span>Admin Panel</span>
+                        </a>
+                    <?php
+                    } elseif($_SESSION['level_id'] == 2) {
+                    ?>
+                        <a href="post.php" class="link flex">
+                        <i class='bx bx-upload'></i>
+                        <span>Posting</span>
+                        </a>
+                    <?php
+                    }
+                    ?>
+                    <!-- <a href="#" class="link flex">
+                    <i class="bx bx-cloud-upload"></i>
+                    <span>Upload New</span>
+                    </a> -->
+                </li>
+                </ul>
             <?php
-        }
-        // while ($row) {
-            // }
+            }?>
+
+                <ul class="menu_item">
+                <div class="menu_title flex">
+                    <span class="title">Setting</span>
+                    <span class="line"></span>
+                </div>
+                <?php
+                if(isset($_SESSION['level_id'])){
+                    ?>
+                    <li class="item">
+                        <a href="crud/edit_profile.php" class="link flex">
+                        <i class="bx bx-user"></i>
+                        <span>Edit User</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a href="../logout.php" class="link flex">
+                        <i class="bx bx-log-out"></i>
+                        <span>Log out</span>
+                        </a>
+                    </li>
+                    <?php
+                }else{
+                    ?>
+                    <li class="item">
+                        <a href="../index.php" class="link flex">
+                        <i class="bx bx-log-in"></i>
+                        <span>Login</span>
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
+                <li class="item">
+                    <a href="aboutus.php" class="link flex">
+                    <i class="bx bx-flag"></i>
+                    <span>About Us</span>
+                    </a>
+                </li>
+                </ul>
+                </div>
+
+            <div class="sidebar_profile flex">
+                <a href="<?php
+                if(isset($_SESSION['level_id'])){
+                    echo "profile.php?user_name=", $_SESSION['user_name'];
+                }else{
+                    echo "#";
+                }
+                ?>">
+                    <span class="nav_image">
+                    <img src="
+                    <?php
+                    if(isset($_SESSION['level_id'])){
+                        echo '../storage/profile/' . $_SESSION['user_profile_path'];
+                        }else{
+                        echo '../storage/profile/default.png';
+                        }
+                    ?>" alt="logo_img" />
+                    </span>
+                    <div class="data_text">
+                    <span class="name">
+                        <?php
+                        if(isset($_SESSION['level_id'])){
+                            echo $_SESSION['user_name'];
+                        }else{
+                            echo 'Guest';
+                        }
+                        ?>
+                    </span>
+                </a>
+                </div>
+            </div>
+            </div>
+        </nav>
+        <!-- Navbar -->
+        <nav class="navbar flex">
+            <i class="bx bx-menu" id="sidebar-open"></i>
+            <form action="search_result.php" method="GET" class="search_form">
+                <input type="text" class="search_box" name="search" placeholder="Judul / #tag / username" id="searchInput"/>
+                <input type="submit" value="Search" class="search_button">
+            </form>
+            
+            <span class="nav_image">
+            <a href="<?php
+            if(isset($_SESSION['level_id'])){
+                echo "profile.php?user_name=", $_SESSION['user_name'];
+                }else{
+                echo "#";
+            }
+            ?>">
+                <img src="<?php
+                if(isset($_SESSION['level_id'])){
+                    echo '../storage/profile/' . $_SESSION['user_profile_path'];
+                }else{
+                    echo '../storage/profile/default.png';
+                    }
+                    ?>" alt="logo_img" />
+            </a>
+            </span>
+        </nav>
+    <?php
     } else {
         // tampilan jika tidak ada hasil yang ditemukan
-        // echo '<h1>Tidak ada gambar yang ditemukan</h1>';
         header("location:error/not_found.php");
     }
-    // Bebaskan hasil query
     mysqli_free_result($result);
-    
-    // Tutup koneksi ke database
     mysqli_close($koneksi);
 } else {                            // jika header tidak ada parameter post_id
-    // header("location:beranda.php?pesan=show-error");
     header("location:beranda.php");
 }
 ?>
@@ -335,6 +308,11 @@ if ($row > 0) {
             // Redirect ke delete_img.php dengan menyertakan parameter post_id
             window.location.href = "crud/delete_img.php?post_id=<?php echo $row['post_id']; ?>";
         }
+    </script>
+    <script>
+        document.getElementById("undoButton").addEventListener("click", function() {
+            window.history.back();
+        });
     </script>
     <script src="../script/alert-time.js"></script>
     <script src="../script/copy-to-clipboard.js"></script>

@@ -24,11 +24,51 @@ if (isset($_SESSION['level_id'])) {
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>Edit User</title>
                     <link rel="stylesheet" href="../../styles/alert.css">
+                    <!-- <link rel="stylesheet" href="../../styles/admin_panel.css"> -->
+                    <link rel="stylesheet" href="../../styles/style.css">
+                    <style>
+                        body {
+                            margin: 0;
+                            font-family: Arial, sans-serif;
+                            scroll-behavior: smooth; /* Menambahkan properti ini */
+                        }
+                        .fixed-header {
+                            position: fixed;
+                            top: 0;
+                            width: 100%;
+                            background-color: #333;
+                            color: #fff;
+                            z-index: 1000;
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 10px 20px;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                        }
+                        .fixed-header .left-menu a,
+                        .fixed-header .right-menu a {
+                            color: #fff;
+                            text-decoration: none;
+                            margin: 0 10px;
+                            font-weight: bold;
+                            margin-right: 30px;
+                            size: 20px; /* Ukuran teks */
+                        }
+                        .container {
+                            margin-top: 70px; /* Adjust based on header height */
+                        }
+                    </style>
                 </head>
                 <body>
-                    <h3>Edit User</h3>
-                    <a href="../admin_panel.php">Kembali</a>
-                    <form method="POST" action="">
+                    <div class="fixed-header">
+                        <div class="left-menu">
+                            <a href="../beranda.php">Beranda</a>
+                            <a href="../../logout.php">Logout</a>
+                        </div>
+                        <div class="right-menu">
+                            <a href="../admin_panel.php">Admin Panel</a>
+                        </div>
+                    </div>
+                    <!-- <form method="POST" action="">
                         <input type="hidden" name="user_id" value="<?php echo $userData['user_id']; ?>">
                         <label for="user_name">Username</label>
                         <input type="text" name="user_name" value="<?php echo $userData['user_name']; ?>" required>
@@ -47,7 +87,49 @@ if (isset($_SESSION['level_id'])) {
                         <input type="number" name="chatID" value="<?php echo $userData['tele_chat_id']; ?>">
 
                         <input type="submit" name="submit" value="Save Changes">
-                    </form>
+                    </form> -->
+                    <main class="main_content">
+                        <div class="upload_container">
+                            <h2>Edit Data User</h2>
+                            <br>
+                            <form action="" method="POST" class="upload_form">
+                                <div class="form_group">
+                                    <input type="hidden" name="user_id" value="<?php echo $userData['user_id']; ?>">
+                                </div>
+                                <div class="form_group">
+                                    <label for="user_name">Username</label>
+                                    <input type="text" name="user_name" value="<?php echo $userData['user_name']; ?>" required>
+                                </div>
+                                <div class="form_group">
+                                    <label for="name">Name</label>
+                                    <input type="text" name="name" value="<?php echo $userData['name']; ?>" required>
+                                </div>
+                                <div class="form_group">
+                                    <label for="bio">Bio</label>
+                                    <textarea name="bio" type="text"><?php echo $userData['user_bio']; ?></textarea>
+                                </div>
+                                <div class="form_group">
+                                    <label for="password">Password</label>
+                                    <input type="text" name="password" value="<?php echo $userData['password']; ?>" required>
+                                </div>
+                                <div class="form_group">
+                                <label for="level_id">Level</label>
+                                    <select name="level_id" required>
+                                        <option value="1" <?php if ($userData['level_id'] == 1) echo 'selected'; ?>>Admin</option>
+                                        <option value="2" <?php if ($userData['level_id'] == 2) echo 'selected'; ?>>User</option>
+                                    </select>
+                                </div>
+                                <div class="form_group">
+                                    <label for="chatID">Chat ID</label>
+                                    <input type="number" name="chatID" value="<?php echo $userData['tele_chat_id']; ?>">
+                                </div>
+                                <button type="submit" name="submit" value="Save Changes" class="upload_btn flex">
+                                    <i class='bx bx-save' ></i>
+                                    <span>Simpan Perubahan</span>
+                                </button>
+                            </form>
+                        </div>
+                    </main>
                 </body>
                 </html>
                 <?php

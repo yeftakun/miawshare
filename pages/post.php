@@ -92,92 +92,273 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 ?>
 
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Beranda</title>
-        <link rel="stylesheet" type="text/css" href="../styles/style.css">
-        <link rel="stylesheet" type="text/css" href="../styles/alert.css">
-        <link rel="icon" type="image/png" href="../assets/ico/HitoriGotou.ico">
-    </head>
-    <body>
-        
-        <?php
-if(isset($_SESSION['level_id'])) {
-    if($_SESSION['level_id'] == 2) {
-        // halaman posting user
-        ?>
-        <!-- header -->
-        <header>
-            <div class="logo">
-                <img src="../assets/ico/HitoriGotou.ico" alt="logo" width="50">
-            </div>
-            <div class="home-search-bar">
-                <form action="search_result.php" method="GET">
-                    <input type="text" name="search" id="searchInput" placeholder="Judul / #tag / username">
-                    <input type="submit" value="Search">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Centered Upload Form</title>
+    <link rel="stylesheet" href="../styles/style.css" />
+    <link rel="stylesheet" href="../styles/alert.css" />
+    <link rel="icon" type="image/png" href="../assets/logo/logo.png">
+    <!-- <link rel="stylesheet" href="../styles/style2.css" /> -->
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="../script/script.js" defer></script>
+    <style>
+        .preview-container {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .preview-container img {
+            width: 100%;
+            height: auto;
+            display: none;
+        }
+        .preview-container .preview-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ccc;
+        }
+    </style>
+  </head>
+  <body>
+    <?php
+    if(isset($_SESSION['level_id'])){
+        if($_SESSION['level_id'] == 2){
+            // halaman posting khusus user
+            ?>
+            <!-- Main Content -->
+            <main class="main_content">
+              <!-- Upload Form -->
+              <div class="upload_container">
+                <form method="post" enctype="multipart/form-data" class="upload_form">
+                  <div class="form_group">
+                    <label for="post_title">Title</label>
+                    <input type="text" name="post_title" id="post_title">
+                  </div>
+                  <div class="form_group">
+                    <label for="post_description">Description</label>
+                    <textarea name="post_description" id="post_description" rows="4" placeholder="Deskripsi gambar #tag1 #tag2 #tag3"></textarea>
+                  </div>
+                  <div class="form_group">
+                    <label for="image" class="upload_label">
+                      <i class="bx bx-upload"></i>
+                      <span>Select file to upload</span>
+                    </label>
+                    <input type="file" name="image" id="image" style="display: none;" required>
+                  </div>
+                  <div class="preview-container">
+                    <img id="image-preview" src="" alt="Image Preview">
+                    <span class="preview-text">Masukan gambar</span>
+                  </div>
+                  <button type="submit" name="submit" class="upload_btn flex">
+                    <i class="bx bx-cloud-upload"></i>
+                    <span>Upload File</span>
+                  </button>
                 </form>
-            </div>
-            <div class="nav-to">
-                <p><a href="beranda.php">Beranda</a></p>
-            </div>
-            <div class="nav-to">
-                <p><a href="post.php">Posting</a></p>
-            </div>
-            <div class="profile-pic">
-                <a href="profile.php?user_name=<?php echo $_SESSION['user_name']; ?>">
+              </div>
+            </main>
+            <?php
+        }elseif($_SESSION['level_id'] == 1){
+            // jika level id bukan 2, redirect ke panel admin
+            header("location:admin_panel.php");
+        }
+
+    }else{
+        // jika belum login, redirect ke halaman login
+        header("location:../index.php?pesan=needlogin");
+    }
+    ?>
+    <!-- Sidebar -->
+    <nav class="sidebar locked">
+        <div class="logo_items flex">
+            <span class="nav_image">
+                <img src="../assets/logo/logo.png" alt="logo_img" />
+            </span>
+            <span class="logo_name">MiawShare</span>
+            <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
+        </div>
+        <div class="menu_container">
+            <div class="menu_items">
+                <ul class="menu_item">
+                    <div class="menu_title flex">
+                        <span class="title">Dashboard</span>
+                        <span class="line"></span>
+                    </div>
+                    <li class="item">
+                        <a href="beranda.php" class="link flex">
+                            <i class="bx bx-home-alt"></i>
+                            <span>Beranda</span>
+                        </a>
+                    </li>
+                </ul>
+                <?php
+                if(isset($_SESSION['level_id'])) {
+                ?>
+                <ul class="menu_item">
+                <div class="menu_title flex">
+                    <span class="title">Tools</span>
+                    <span class="line"></span>
+                </div>  
+                <li class="item">
                     <?php
-                    echo '<img src="../storage/profile/' . $_SESSION['user_profile_path'] . '" alt="' . $_SESSION['user_profile_path'] . '" width="50px"';
+                    if($_SESSION['level_id'] == 1) {
                     ?>
+                        <a href="admin_panel.php" class="link flex">
+                        <i class="bx bx-cog"></i>
+                        <span>Admin Panel</span>
+                        </a>
+                    <?php
+                    } elseif($_SESSION['level_id'] == 2) {
+                    ?>
+                        <a href="post.php" class="link flex">
+                        <i class='bx bx-upload'></i>
+                        <span>Posting</span>
+                        </a>
+                    <?php
+                    }
+                    ?>
+                </li>
+                </ul>
+                <?php
+                }
+                ?>
+                <ul class="menu_item">
+                <div class="menu_title flex">
+                    <span class="title">Setting</span>
+                    <span class="line"></span>
+                </div>
+                <?php
+                if(isset($_SESSION['level_id'])){
+                    ?>
+                    <li class="item">
+                        <a href="crud/edit_profile.php" class="link flex">
+                        <i class="bx bx-user"></i>
+                        <span>Edit User</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a href="../logout.php" class="link flex">
+                        <i class="bx bx-log-out"></i>
+                        <span>Log out</span>
+                        </a>
+                    </li>
+                    <?php
+                }else{
+                    ?>
+                    <li class="item">
+                        <a href="../index.php" class="link flex">
+                        <i class="bx bx-log-in"></i>
+                        <span>Login</span>
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
+                <li class="item">
+                    <a href="aboutus.php" class="link flex">
+                    <i class="bx bx-flag"></i>
+                    <span>About Us</span>
+                    </a>
+                </li>
+                </ul>
+            </div>
+
+            <div class="sidebar_profile flex">
+                <a href="<?php
+                if(isset($_SESSION['level_id'])){
+                    echo "profile.php?user_name=", $_SESSION['user_name'];
+                }else{
+                    echo "#";
+                }
+                ?>">
+                    <span class="nav_image">
+                    <img src="
+                    <?php
+                    if(isset($_SESSION['level_id'])){
+                        echo '../storage/profile/' . $_SESSION['user_profile_path'];
+                    }else{
+                        echo '../storage/profile/default.png';
+                    }
+                    ?>" alt="logo_img" />
+                    </span>
+                    <div class="data_text">
+                    <span class="name">
+                        <?php
+                        if(isset($_SESSION['level_id'])){
+                            echo $_SESSION['user_name'];
+                        }else{
+                            echo 'Guest';
+                        }
+                        ?>
+                    </span>
                 </a>
+                </div>
             </div>
-            <div class="logout">
-                <a href="../logout.php">LOGOUT</a>
-            </div>
-        </header>
-        
-        <!-- content -->
-        <h1>Upload</h1>
-        <?php
-        if(isset($_GET['pesan'])){
-            if($_GET['pesan']=="oversize"){
-                echo "<div class='alert'>Ukuran gambar melebihi $size_in_kb KB</div>";
+        </nav>
+        <!-- Navbar -->
+        <nav class="navbar flex">
+            <i class="bx bx-menu" id="sidebar-open"></i>
+            <form action="search_result.php" method="GET" class="search_form">
+                <input type="text" class="search_box" name="search" placeholder="Judul / #tag / username" id="searchInput"/>
+                <input type="submit" value="Search" class="search_button">
+            </form>
+            
+            <span class="nav_image">
+            <a href="<?php
+            if(isset($_SESSION['level_id'])){
+                echo "profile.php?user_name=", $_SESSION['user_name'];
+            }else{
+                echo "#";
+            }
+            ?>">
+                <img src="<?php
+                if(isset($_SESSION['level_id'])){
+                    echo '../storage/profile/' . $_SESSION['user_profile_path'];
+                }else{
+                    echo '../storage/profile/default.png';
+                }
+                ?>" alt="logo_img" />
+            </a>
+            </span> 
+        </nav>
+        <script>
+        // Function to preview the selected image
+        function previewImage() {
+            var preview = document.querySelector('#image-preview');
+            var file = document.querySelector('input[type=file]').files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+                preview.style.display = 'block'; // Show the preview image
+                document.querySelector('.preview-text').style.display = 'none'; // Hide the preview text
+            }
+
+            if (file) {
+                reader.readAsDataURL(file); // Read the file as a data URL
+            } else {
+                preview.src = ''; // Clear the preview if no file is selected
+                preview.style.display = 'none'; // Hide the preview image
+                document.querySelector('.preview-text').style.display = 'block'; // Show the preview text
             }
         }
-        ?>
-        <div class="form">
-            <form method="POST" enctype="multipart/form-data" class="form">
-                <!-- Tampilkan pesan kesalahan jika ada -->
-                <?php if (!empty($errorMsg)) { ?>
-                    <div class="alert"><?php echo $errorMsg; ?></div>
-                    <?php 
-                } ?>
 
-                <label for="image" class="uploadimg">Upload Gambar</label>
-                <input type="file" id="image" name="image" accept="image/*">
-                <img id="image-preview" src="#" alt="image-preview" style="display: none;"> 
-                <label for="post_title">Judul</label>
-                <input type="text" id="post_title" name="post_title">
-            
-                <label for="post_description">Deskripsi</label>
-                <textarea id="post_description" name="post_description" placeholder="Deskripsi gambar #tag1 #tag2 #tag3" rows="5"></textarea>
-            
-                <label for="post_link">Link</label>
-                <input type="text" id="post_link" name="post_link">
-            
-                <button class="button" type="submit">Upload</button>
-        </form>
-    </div>
-
-<?php
-    } elseif($_SESSION['level_id'] == 1) {
-        header("location:admin_panel.php");
-    }
-} else {
-    header("location:error/index.php?pesan=needlogin");
-}
-?>
-    <br/>
-    <script src="../script/preview-img.js"></script>
-    <script src="../script/alert-time.js"></script>
-</body>
+        // Event listener for file input change
+        document.querySelector('input[type=file]').addEventListener('change', previewImage);
+        </script>
+        <script src="../script/preview-img.js"></script>
+        <script src="../script/alert-time.js"></script>
+    </body>
 </html>

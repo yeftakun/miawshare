@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $totalUsername = $row['total'];
     
     if ($totalUsername > 0) {
-        $errorMsg = "Username sudah digunakan. Silakan pilih username lain.";
+        header("location:daftar.php?pesan=userexists");
     } else {
 
         // Cek apakah tele_chat_id sudah ada dalam database
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (empty($errorMsg) && mysqli_query($koneksi, $insertQuery)) {
                     mysqli_query($koneksi, $insertOTPQuery); // insert OTP code
                     // Redirect ke halaman sukses dengan alert jika berhasil
-                    header("Location: verif-otp.php?pesan=registered");
+                    header("Location: verif-otp.php?pesan=registered&username=$userName");
                     exit();
                 } elseif (empty($errorMsg)) {
                     $errorMsg = "Gagal memasukkan data ke database: " . mysqli_error($koneksi);
@@ -126,18 +126,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Daftar</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="icon" type="image/png" href="assets/logo/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiawShare - Login</title>
+    <link rel="stylesheet" href="styles/daftar.css">
+    <!-- <link rel="stylesheet" href="styles/style.css"> -->
+    <link rel="icon" type="image/png" href="assets/logo/logo.png">  
     <link rel="stylesheet" href="styles/alert.css">
+    <link rel="stylesheet" href="styles/hide-spin-button.css">
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
 </head>
 <body>
     <?php
     if(isset($_GET['pesan'])){
         if($_GET['pesan']=="filetoolarge"){
             echo "<div class='alert'>File gambar tidak boleh lebih dari 512KB</div>";
+        }
+    }
+    if(isset($_GET['pesan'])){
+        if($_GET['pesan']=="userexists"){
+            echo "<div class='alert'>Username sudah digunakan. Silakan gunakan username yang lain.</div>";
         }
     }
     if(isset($_GET['pesan'])){
@@ -151,44 +171,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     ?>
-    <div class="header">
-        <h1>Daftar</h1>
-        <p><a href="index.php">Kembali</a></p>
-    </div>
-    <div class="form">
-        <form method="POST" enctype="multipart/form-data" class="form">
-            <!-- Tampilkan pesan kesalahan jika ada -->
-            <?php if (!empty($errorMsg)) { ?>
-                <div class="alert"><?php echo $errorMsg; ?></div>
-            <?php } ?>
-            <label for="user_name">Username:</label>
-            <input type="text" id="user_name" name="user_name" required>
-
-            <label for="name">Nama:</label>
-            <input type="text" id="name" name="name" required>
-
-            <!-- <label for="image" class="uploadimg">Upload Profile Image</label>
-            <input type="file" id="image" name="image" accept="image/*">
-            <img id="image-preview" src="#" alt="image-preview" style="display: none;">  -->
-            <!-- Added image preview with display: none -->
-
-            <label for="bio">Bio</label>
-            <textarea id="bio" name="bio" placeholder="About you" rows="5" required></textarea>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <label for="tele_chat_id">ChatID Telegram:</label>
-            <input type="number" id="tele_chat_id" name="tele_chat_id" required>
-            <p><a href="https://t.me/chatIDrobot" target="_blank">Dapatkan ChatID</a></p>
-            <p>Sebelum submit, lakukan init (tulis apapun) terlebih dahulu <a href="https://t.me/spamtestingbot" target="_blank">di sini</a></p>
-
-
-            <button class="button" type="submit">Daftar</button>
+    <div class="login-container">
+        <form class="login-form" method="POST" enctype="multipart/form-data">
+            <div class="logo_items flex">
+                <span class="nav_image">
+                    <img src="assets/logo/logo.png" alt="logo_img" />
+                </span>
+                <span class="logo_name">MiawShare</span>
+            </div>
+            <h2>Daftar</h2>
+            <div class="form-group">
+                <label for="name">Nama</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                <input type="text" id="bio" name="bio" value="-" required>
+            </div>
+            <div class="form-group">
+                <label for="tele_chat_id">ChatID Telegram:</label>
+                <input type="number" id="tele_chat_id" name="tele_chat_id" required>
+            </div>
+            <p>Dapatkan <a href="https://t.me/chatIDrobot" target="_blank">ChatID</a></p>
+            <p>Tulis apapun di <a href="https://t.me/spamtestingbot" target="_blank">Bot Notifikasi</a></p>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <!-- <input type="text" id="username" name="username" required> -->
+                <input type="text" id="user_name" name="user_name" required>
+            </div>
+            <div class="form-group password-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <button type="button" id="togglePassword" class="toggle-password">Show</button>
+            </div>
+            <button type="submit">Buat</button>
+            <p id="mendaftar">Sudah punya akun? <a href="index.php">Kembali</a></p>
+            <p id="verify"><a href="verif-otp.php">Verifikasi</a></p>
         </form>
     </div>
-
-    <script src="script/preview-img.js"></script>
+    <script src="script/login.js"></script>
     <script src="script/alert-time.js"></script>
 </body>
 </html>

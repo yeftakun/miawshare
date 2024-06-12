@@ -1,0 +1,194 @@
+/* admin_panel.css */
+
+/* Style untuk tombol */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.deleteBtn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #f81111;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deleteBtn:hover {
+    background-color: #af0d0df2;
+}
+
+/* Style untuk tabel */
+/* .container {
+    margin-bottom: 20px;
+    max-width: 1000px;
+} */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+
+/* admin_panel.css */
+
+/* Tabel Level dan OTP*/
+/*#levelTable, #otpTable {
+    width: 40%;
+} */
+
+/* Tabel Posts dan Users */
+#postsTable, #usersTable, #levelTable, #otpTable {
+    width: 90%;
+}
+
+/* Pengaturan overflow untuk tabel */
+.container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+}
+
+
+/* SCROLL TABLE */
+body {
+    height: 100%;
+    margin: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: #333333;
+    background-color: #EEF5FE;
+}
+.table-container {
+    margin: 0 auto;
+    width: 1250px;
+    padding: 25px;
+    height: 400px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background-color: #fff;
+}
+.GridViewScrollHeader th, .GridViewScrollHeader td {
+    padding: 10px 8px;
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+    border-right: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    background-color: #eef2f2;
+    color: #848484;
+    text-align: center;
+    vertical-align: bottom;
+}
+.GridViewScrollItem .week:nth-child(2n):not(.time_green,.time_red,.time_yellow) {
+    background-color: #f7fbfb;
+    font-size: 16px;
+    line-height: 24px;
+}
+.GridViewScrollItem .week.time_red {
+    background-color: #feb8b8;
+    position: relative;
+}
+.GridViewScrollItem .time_red:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background-color: #ff4f4f;
+}
+.GridViewScrollItem .week.time_yellow {
+    position: relative;
+    background-color: #ffc850;
+}
+.GridViewScrollItem .time_yellow:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background-color: #eba100;
+}
+
+.GridViewScrollItem .time_green {
+    position: relative;
+    background-color: #9ce579;
+}
+.GridViewScrollItem .time_green:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background-color: #62bd36;
+}
+
+.GridViewScrollItem TD {
+    padding: 10px 8px;
+    white-space: nowrap;
+    border-right: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    background-color: #FFFFFF;
+    color: #444444;
+    text-align: center;
+}
+
+.GridViewScrollItemFreeze TD {
+    padding: 10px 8px;
+    white-space: nowrap;
+    border-right: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    background-color: #FAFAFA;
+    color: #444444;
+}
+
+.GridViewScrollFooterFreeze TD {
+    padding: 10px 8px;
+    white-space: nowrap;
+    border-right: 1px solid #ededed;
+    border-top: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    background-color: #F4F4F4;
+    color: #444444;
+    text-align: center;
+}
+
+#gvMain_Header_Fixed .GridViewScrollHeader .dummy-cell {
+    color: transparent;
+    border-right: 1px solid #ededed;
+}
+#gvMain_Header_Freeze .GridViewScrollHeader .dummy-cell {
+    color: transparent;
+    border-right: 1px solid transparent;
+}

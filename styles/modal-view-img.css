@@ -1,0 +1,28 @@
+/* CSS */
+.modal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparan */
+    z-index: 999; /* Pastikan modal muncul di atas konten */
+}
+
+.modal {
+    background-color: #fefefe;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+}
