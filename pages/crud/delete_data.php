@@ -39,8 +39,9 @@ if(isset($_GET['page']) && isset($_GET['id'])) {
     // Eksekusi query DELETE
     if(mysqli_query($koneksi, $query)) {
         // Jika penghapusan berhasil, beri respon dengan status sukses
-        http_response_code(200);
-        echo "Data berhasil dihapus";
+        // http_response_code(200);
+        // echo "Data berhasil dihapus";
+        header("Location: ../admin_panel.php?pesan=success_delete");
     } else {
         // Jika terjadi kesalahan saat menghapus data, beri respon dengan status error
         http_response_code(500);
