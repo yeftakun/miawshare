@@ -9,6 +9,9 @@ include 'koneksi.php';
 $username = $_POST['user_name'];
 $password = $_POST['password'];
 
+$username = mysqli_real_escape_string($koneksi, $username);
+$password = mysqli_real_escape_string($koneksi, $password);
+
 
 // menyeleksi data user dengan username dan password yang sesuai
 $login = mysqli_query($koneksi,"select * from users where user_name='$username' and password='$password'");
