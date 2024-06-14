@@ -35,4 +35,4 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 
 ## Config⚙️
 
-Copy file `temp_environmen.php` dan paste dengan nama `environmen.php`. Ganti isi file dengan token bot dan chat id anda.
+Copy file `template_environment.php` dan paste dengan nama `environment.php`. Sesuaikan isi file dengan token bot dan max size upload.
