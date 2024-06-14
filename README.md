@@ -1,39 +1,38 @@
-# Pinterest KW
+# MiawShare
 
-### Whats New?
+Dikembangkan untuk memenuhi tugas mata kuliah pemrograman web.
 
-Perubahan terbaru pada proyek:
+<div align="center" style="flex: 1;">
+        <img src="assets/logo/logo.png" alt="gambar" width=50%/>
+</div>
 
-- Menambahkan verifikasi OTP via API telegram modal Chat ID user
-- Update database terbaru: Integrity constraint `users.user_name` (parent) & `otp.user_name` (child).
-- Saat register, di database insert data users dulu baru insert data otp.
+## Aboutℹ️
 
-### CREDIT
+MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan gambar menarik. Dengan platform kami yang ramah pengguna, anda dapat dengan mudah menjelajahi berbagai ilustrasi oleh pengguna kami. Kami membangun MiawShare dengan tujuan untuk menciptakan komunitas yang inklusif dan mendukung, di mana setiap orang dapat merasa diterima dan dihargai. Kami menghargai keragaman dalam segala bentuknya dan berkomitmen untuk menciptakan lingkungan yang aman bagi semua orang untuk berekspresi dan berbagi.
 
-[Icon](https://id.pinterest.com/pin/408912841182046181/)
+## Languages & Database💻
 
-### Catatan:
-- Jangan menaruh file penting di `storage/posting/` karena file di direktori ini akan terhapus jika namanya tidak terdapat di kolom `posts.post_img_path`.
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
-### Database:
+## Feature💡
 
-#### 1. Event Hapus data yang belum di validasi saat 3 menit
+- Pendaftaran pengguna dan verifikasi OTP
+- Notifikasi via [Bot Telegram](https://t.me/spamtestingbot)
+- Upload dan hapus postingan
+- Pencarian postingan lewat judul, deskripsi dan pengupload
+- Edit informasi pengguna dan hapus akun
+- Regenerate OTP, hapus postingan, tambahkan/edit/hapus pengguna (Admin)
 
-Input gambar tidak dipakai karena ketika akun yang belum tervalidasi dihapus file gambar tertinggal di direktori `storage/profile/`.
+## Credit📜
 
-```
-DELIMITER $$
+- MiawShare Official Logo: [by: RyanManganguwi](https://www.instagram.com/enokki43at)
+- Gambar tambahan: [Forbiden Page](https://tenor.com/j5llAKTW5xF.gif) | [Not Found](https://tenor.com/usTAOkJQpDE.gif) | [Bye-bye](https://tenor.com/uzAzw3pnkQ7.gif)
+- Referensi: [Pinterest](https://www.pinterest.com/) | [Pixiv](https://www.pixiv.net/en/)
+- Our team: [Yefta Asyel](https://github.com/yeftakun/) (Backend) | [Andro Lay](https://github.com/AndroLay/) (Frontend) | [Ryan Manganguwi](https://github.com/RyanManganguwi/) (Design & Frontend) | [Aulia Nurhaliza](https://github.com/AuliaNurhaliza/) (Frontend)
 
-CREATE EVENT hapus_data_nonaktif
-ON SCHEDULE EVERY 1 MINUTE
-DO
-BEGIN
-    DELETE FROM users WHERE status = 'Nonaktif' AND delete_in <= NOW();
-END$$
+## Config⚙️
 
-DELIMITER ;
-```
-
-```
-SET GLOBAL event_scheduler = ON;
-```
+Copy file `template_environment.php` dan paste dengan nama `environment.php`. Sesuaikan isi file dengan token bot dan max size upload.
