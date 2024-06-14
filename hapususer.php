@@ -1,6 +1,6 @@
 <?php
 include 'koneksi.php';
-include 'environtment.php';
+include 'environment.php';
 
 $token = TOKEN_BOT;
 $chatID = OWNER_CHAT_ID;
@@ -16,12 +16,12 @@ mysqli_close($koneksi);
 // $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=Cron%20Job%20is%20running%20every%20minute.";
 // $ch = curl_init();
 
-// Set opsi cURL
+// // Set opsi cURL
 // curl_setopt($ch, CURLOPT_URL, $telegramAPI);
 // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 // curl_exec($ch);
 
-// Tutup cURL
+// // Tutup cURL
 // curl_close($ch);
 ?>
