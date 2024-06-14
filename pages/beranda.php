@@ -7,7 +7,7 @@ $query = "SELECT users.user_name, users.name, users.user_profile_path, posts.pos
           FROM posts 
           JOIN users ON posts.user_id = users.user_id 
           ORDER BY posts.create_in DESC 
-          LIMIT 20";
+          LIMIT 100";
 $result = mysqli_query($koneksi, $query);
 
 ?>
@@ -19,6 +19,11 @@ $result = mysqli_query($koneksi, $query);
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Beranda</title>
+            <meta name="description" content="Bagikan gambarmu di MiawShare!" />
+            <meta property="og:title" content="MiawShare - Bagikan Gambar" />
+            <meta property="og:url" content="https://miawshare.my.id/pages/beranda.php" />
+            <meta property="og:description" content="Upload dan dapatkan gambar! UwU" />
+            <meta property="og:image" content="https://miawshare.my.id/assets/logo/logo.png" />
             <link rel="stylesheet" href="../styles/style.css" />
             <link rel="icon" type="image/png" href="../assets/logo/logo.png" />
             <link rel="stylesheet" href="../styles/alert.css">

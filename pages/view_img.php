@@ -47,6 +47,12 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
     }
 ?>
 
+    <?php
+
+// Pastikan ada hasil yang ditemukan
+if ($row > 0) {
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,6 +61,11 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View Image</title>
+    <meta name="description" content="Lihat gambar yang diupload pengguna kami!" />
+    <meta property="og:title" content="<?php echo $row['post_title']; ?> - <?php echo $row['user_name']; ?>" />
+    <meta property="og:url" content="https://miawshare.my.id/pages/view_img.php?post_id=<?php echo $row['post_id']; ?>" />
+    <meta property="og:description" content="<?php echo $row['post_description']; ?>" />
+    <meta property="og:image" content="https://miawshare.my.id/storage/posting/<?php echo $row['post_img_path']; ?>" />
     <!-- <link rel="stylesheet" href="../css/style.css"> -->
     <link rel="stylesheet" href="../styles/alert.css">
     <link rel="stylesheet" href="../styles/image.css">
@@ -66,11 +77,7 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
 </head>
 <body>
     <br><br><br><br>
-    <?php
 
-// Pastikan ada hasil yang ditemukan
-if ($row > 0) {
-    ?>
     <div class="container">
         <div class="content-card">
             <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>" class="content-image">

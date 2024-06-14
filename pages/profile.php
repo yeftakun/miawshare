@@ -51,6 +51,11 @@ if(isset($_GET['user_name'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile</title>
+    <meta name="description" content="Halaman profil pengguna" />
+    <meta property="og:title" content="<?php echo $name; ?>" />
+    <meta property="og:url" content="https://miawshare.my.id/pages/profile.php?user_name=<?php echo $user_name; ?>" />
+    <meta property="og:description" content="<?php echo $user_bio; ?>" />
+    <meta property="og:image" content="https://miawshare.my.id/storage/profile/<?php echo $user_profile_path; ?>" />
     <link rel="stylesheet" href="../styles/profil.css">
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="icon" type="image/png" href="../assets/logo/logo.png">

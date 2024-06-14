@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiawShare - Login</title>
+    <meta name="description" content="Bagikan gambarmu di MiawShare!" />
+    <meta property="og:title" content="MiawShare - Login" />
+    <meta property="og:url" content="https://miawshare.my.id/" />
+    <meta property="og:description" content="Daftar sekarang dan bagikan gambarmu!" />
+    <meta property="og:image" content="https://miawshare.my.id/assets/logo/logo.png" />
     <link rel="stylesheet" href="styles/login.css">
     <link rel="stylesheet" href="styles/alert.css">
     <link rel="icon" type="image/png" href="assets/logo/logo.png">
