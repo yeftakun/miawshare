@@ -20,7 +20,7 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 ## Feature💡
 
 - Pendaftaran pengguna dan verifikasi OTP
-- Notifikasi via Bot Telegram
+- Notifikasi via [Bot Telegram](https://t.me/spamtestingbot)
 - Upload dan hapus postingan
 - Pencarian postingan lewat judul, deskripsi dan pengupload
 - Edit informasi pengguna dan hapus akun
