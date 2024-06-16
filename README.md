@@ -31,6 +31,7 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - MiawShare Official Logo: [by: RyanManganguwi](https://www.instagram.com/enokki43at)
 - Gambar tambahan: [Forbiden Page](https://tenor.com/j5llAKTW5xF.gif) | [Not Found](https://tenor.com/usTAOkJQpDE.gif) | [Bye-bye](https://tenor.com/uzAzw3pnkQ7.gif) | [Default Profile](http://opening.download/view.php?pic=https://i.pinimg.com/474x/94/cb/68/94cb68baea50bb98cdab65b74e731c1c.jpg)
 - Referensi: [Pinterest](https://www.pinterest.com/) | [Pixiv](https://www.pixiv.net/en/)
+- Hosting: [IdCloudHost](https://my.idcloudhost.com/clientarea.php)
 - Our team: [Yefta Asyel](https://github.com/yeftakun/) (Backend) | [Andro Lay](https://github.com/AndroLay/) (Frontend) | [Ryan Manganguwi](https://github.com/RyanManganguwi/) (Design & Frontend) | [Aulia Nurhaliza](https://github.com/AuliaNurhaliza/) (Frontend)
 
 ## Config⚙️
