@@ -34,6 +34,3 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - Hosting: [IdCloudHost](https://my.idcloudhost.com/clientarea.php)
 - Our team: [Yefta Asyel](https://github.com/yeftakun/) (Backend) | [Andro Lay](https://github.com/AndroLay/) (Frontend) | [Ryan Manganguwi](https://github.com/RyanManganguwi/) (Design & Frontend) | [Aulia Nurhaliza](https://github.com/AuliaNurhaliza/) (Frontend)
 
-## Config⚙️
-
-Copy file `template_environment.php` dan paste dengan nama `environment.php`. Sesuaikan isi file dengan token bot dan max size upload.
