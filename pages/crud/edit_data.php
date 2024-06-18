@@ -64,22 +64,22 @@ if (isset($_SESSION['level_id'])) {
                     $new_chatID = $newData['tele_chat_id'];
                     $new_password = $newData['password'];
 
-                    $message = "*Data%20anda%20telah%20diperbaharui%20oleh%20Admin!*%0A%0ANama:%20$new_name%0AUsername:%20$new_user_name%0ABio:%20$new_bio%0ALevel:%20$new_level%0APassword:%20$new_password%0AChat%20ID:%20$new_chatID.";
-
-                    // cek apabila user memiliki chat_id, maka lakukan pengiriman pesan
-                    if ($chatID != 0) {
-                        // init tele API
-                        $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=Markdown&chat_id=$chatID&text=$message";
-                        $ch = curl_init();
-                        // Set opsi cURL
-                        curl_setopt($ch, CURLOPT_URL, $telegramAPI);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_exec($ch);
-                        // Tutup cURL
-                        curl_close($ch);
-                    }
+                    $message = "*Data%20anda%20telah%20diperbaharui%20oleh%20Admin!*%0A%0AUsername:%20$new_user_name%0APassword:%20$new_password%0ALevel:%20$new_level%0AChat%20ID:%20$new_chatID.";
 
                     if ($resultUpdateUser) {
+                        // cek apabila user memiliki chat_id, maka lakukan pengiriman pesan
+                        if ($chatID != 0) {
+                            // init tele API
+                            $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=Markdown&chat_id=$chatID&text=$message";
+                            $ch = curl_init();
+                            // Set opsi cURL
+                            curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_exec($ch);
+                            // Tutup cURL
+                            curl_close($ch);
+                        }
+
                         // jika diri sendiri mengubah level_id, maka destroy session dan logout. Tetapi jika diri sendiri tidak mengubah level_id, maka session tetap ada
                         if ($_SESSION['user_id'] == $user_id && $_SESSION['level_id'] != $new_level) {
                             session_destroy();
