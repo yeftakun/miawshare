@@ -176,7 +176,8 @@ if (isset($_SESSION['level_id'])) {
 
                     $new_user_name = $newData['user_name'];
                     $new_name = str_replace(' ', '%20', $newData['name']);
-                    $new_bio = $newData['user_bio'];
+                    $new_bio = str_replace(' ', '%20', $newData['user_bio']);
+                    // $new_bio = $newData['user_bio'];
                     $new_level = $newData['level_id']; 
                     if ($chatID == 0) {
                         $new_chatID = "0";
@@ -224,20 +225,25 @@ if (isset($_SESSION['level_id'])) {
                             }
                         }
                         header("location:../admin_panel.php?pesan=successupdateusers");
+                        exit();
                     } else {
                         echo "<div class='alert'>Failed to update user data.</div>";
                     }
                 }
             } else {
                 header("location:../error/not_found.php");
+                exit();
             }
         } else {
             header("location:../error/not_found.php");
+            exit();
         }
     } else {
         header("location:../error/deniedpage.php");
+        exit();
     }
 } else {
     header("location:../../index.php?pesan=needlogin");
+    exit();
 }
 ?>
