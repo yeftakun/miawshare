@@ -266,7 +266,7 @@
                                     <a href="https://www.instagram.com/andro.lay/"><i class='bx bxl-instagram'></i></a>
                                 </div>
                                 <div class="logo-linkedin">
-                                    <a href="https://www.linkedin.com/in"><i class='bx bxl-linkedin'></i></a>
+                                    <a href="https://www.linkedin.com/in/andro-lay-79b27129a/"><i class='bx bxl-linkedin'></i></a>
                                 </div>
                                 <div class="logo-github">
                                     <a href="https://github.com/androlay"><i class='bx bxl-github'></i></a>
