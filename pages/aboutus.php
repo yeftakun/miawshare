@@ -370,10 +370,9 @@
     <div class="contact-section">
         <h2>Contact Us</h2>
         <div class="contact-icons">
-            <a href="mailto:your-email@example.com"><i class='bx bx-envelope'></i></a>
-            <a href="https://www.instagram.com/yourprofile"><i class='bx bxl-instagram'></i></a>
-            <a href="https://www.linkedin.com/in/yourprofile"><i class='bx bxl-linkedin'></i></a>
-            <a href="https://github.com/yourprofile"><i class='bx bxl-github'></i></a>
+            <a href="mailto:yeftaasyel026@student.unsrat.ac.id"><i class='bx bx-envelope'></i></a>
+            <a href="https://example.com"><i class='bx bxl-instagram'></i></a>
+            <a href="https://github.com/yeftakun/miawshare/issues"><i class='bx bxl-github'></i></a>
         </div>
     </div>
 
