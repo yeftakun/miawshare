@@ -10,7 +10,7 @@ $token = TOKEN_BOT;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Send Notification</title>
     <link rel="stylesheet" href="../../styles/alert.css">
     <link rel="stylesheet" href="../../styles/style.css">
     <link rel="stylesheet" type="text/css" href="../styles/admin_panel.css">
@@ -303,6 +303,92 @@ if ($count > 0) {
             } else if ($page == "posts") {
                 // bagian untuk post
                 echo "<h1>Mendatang</h1>";
+            } else if ($page == "notification") {
+                // Mengirim notifikasi dengan target chat id user yang dipilih melalui dropdown
+                $queryGetUsers = "SELECT * FROM users where tele_chat_id != '0'";
+                $resultGetUsers = mysqli_query($koneksi, $queryGetUsers);
+                ?>
+                <main class="main_content">
+                    <div class="upload_container">
+                        <h2>Kirim Notifikasi</h2>
+                        <br>
+                        <form action="" method="POST" enctype="multipart/form-data" class="upload_form">
+                            <div class="form_group">
+                                <label for="user_name">Username</label>
+                                <select name="user_name" id="user_name">
+                                    <option value="none">None</option>
+                                    <option value="all">To All</option>
+                                    <?php
+                                    while ($row = mysqli_fetch_array($resultGetUsers)) {
+                                        echo '<option value="'.$row['user_name'].'">'.$row['user_name'].'</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form_group">
+                                <label for="message">Message</label>
+                                <textarea name="message" type="text" placeholder="Message" require></textarea>
+                            </div>
+                            <button type="submit" name="submit" class="upload_btn flex" value="Send Notification">
+                                <span>Kirim Notifikasi</span>
+                            </button>
+                        </form>
+                    </div>
+                </main>
+                <?php
+
+                // Memproses formulir saat tombol submit ditekan
+
+                if (isset($_POST['submit'])) {
+                    $user_name = $_POST['user_name'];
+                    $message = $_POST['message'];
+                    // Agar karakter khusus dapat dikirimkan melalui URL, karena parse_mode=markdown maka karakter pda format markdown tidak akan dianggap sebagai karakter khusus
+                    $message = str_replace(" ", "%20", $message);
+                    $message = str_replace("\\n", "%0A", $message); // untuk ini tidak perlu karena dibutuhkan pada pengetikan
+                    $message = str_replace("*", "%2A", $message);
+                    $message = str_replace("_", "%5F", $message);
+                    $message = str_replace("[", "%5B", $message);
+                    $message = str_replace("]", "%5D", $message);
+                    $message = str_replace("(", "%28", $message);
+                    $message = str_replace(")", "%29", $message);
+                    $message = str_replace("~", "%7E", $message);
+                    $message = str_replace("\\", "%5C", $message);
+
+                    if ($user_name == 'all') {
+                        // Mengambil semua chatID pengguna
+                        $queryGetChatID = "SELECT tele_chat_id FROM users where tele_chat_id != '0'";
+                        $resultGetChatID = mysqli_query($koneksi, $queryGetChatID);
+                        while ($row = mysqli_fetch_array($resultGetChatID)) {
+                            $chatID = $row['tele_chat_id'];
+                            $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=$message";
+                            // Mengirimkan notifikasi ke semua pengguna
+                            $ch = curl_init();
+                            // Set opsi cURL
+                            curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            curl_exec($ch);
+                            // Tutup cURL
+                            curl_close($ch);
+                        }
+                        echo "<div class='done'>Notifikasi terkirim ke semua pengguna</div>";
+                    } else {
+                        // Mengambil chatID pengguna yang dipilih
+                        $queryGetChatID = "SELECT tele_chat_id FROM users WHERE user_name = '$user_name'";
+                        $resultGetChatID = mysqli_query($koneksi, $queryGetChatID);
+                        $row = mysqli_fetch_assoc($resultGetChatID);
+                        $chatID = $row['tele_chat_id'];
+                        $telegramAPI = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=$message";
+                        // Mengirimkan notifikasi ke pengguna yang dipilih
+                        $ch = curl_init();
+                        // Set opsi cURL
+                        curl_setopt($ch, CURLOPT_URL, $telegramAPI);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_exec($ch);
+                        // Tutup cURL
+                        curl_close($ch);
+                        echo "<div class='done'>Notifikasi terkirim ke $user_name</div>";
+                    }
+                }
             } else {
                 header("location:../error/not_found.php"); // jika parameter page tidak sesuai
                 exit();
@@ -321,6 +407,6 @@ if ($count > 0) {
 }
 
 ?>
-
+<script src="../../script/alert-time.js"></script>
 </body>
 </html>

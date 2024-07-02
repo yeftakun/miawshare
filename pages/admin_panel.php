@@ -228,6 +228,7 @@ if(isset($_SESSION['level_id'])) {
         <div id="usersSection" class="table-container">
             <h2>Users Table</h2>
             <a href="crud/add_data.php?page=users" class="btn">Add Data</a>
+            <a href="crud/add_data.php?page=notification" class="btn">Kirim Pesan</a>
             <table id="usersTable" style="width:100%;border-collapse:collapse;">
                 <?php
                 if (mysqli_num_rows($resultUsers) > 0) {
