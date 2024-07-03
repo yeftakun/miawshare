@@ -204,6 +204,19 @@ if(isset($_GET['user_name'])) {
                         <span>Edit User</span>
                         </a>
                     </li>
+                    <?php
+                    // Mengunduh semua postingan yang sudah pengguna buat --> ke file crud/download.php
+                    if($_SESSION['level_id'] == 2){
+                        ?>
+                        <li class="item">
+                            <a href="crud/download.php" class="link flex">
+                            <i class="bx bx-download"></i>
+                            <span>Download All</span>
+                            </a>
+                        </li>
+                        <?php
+                    }
+                    ?>
                     <li class="item">
                         <a href="../logout.php" class="link flex">
                         <i class="bx bx-log-out"></i>
