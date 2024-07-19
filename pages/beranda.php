@@ -1,13 +1,16 @@
 <?php
 session_start();
 include '../koneksi.php';
+include '../environment.php';
+
+$limit_beranda = LIMIT_BERANDA;
 
 // Query untuk mengambil data gambar dan informasi pengguna
 $query = "SELECT users.user_name, users.name, users.user_profile_path, posts.post_id, posts.post_img_path, posts.post_title, posts.create_in 
           FROM posts 
           JOIN users ON posts.user_id = users.user_id 
           ORDER BY posts.create_in DESC 
-          LIMIT 100";
+          LIMIT $limit_beranda";
 $result = mysqli_query($koneksi, $query);
 
 ?>
