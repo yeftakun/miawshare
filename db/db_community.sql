@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2024 at 12:17 PM
+-- Generation Time: Jul 19, 2024 at 07:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -69,6 +69,23 @@ CREATE TABLE `posts` (
   `create_in` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`post_id`, `user_id`, `post_img_path`, `post_title`, `post_description`, `post_link`, `create_in`) VALUES
+(40, 123, 'HitoriGotou.jpg', 'Bocchi Glasses', '#animegirl #kawaii #waifu', '', '2024-07-19 17:28:22'),
+(41, 123, 'shiroko.jpg', 'Shiroko', '#animegirl #waifu #kawaii', '', '2024-07-19 17:28:49'),
+(42, 123, '4e0f5bb9-dd98-4fe6-83f8-c86d86001b48.jpg', 'CPP for Beginer', '#meme #book', '', '2024-07-19 17:29:23'),
+(43, 123, 'Rocking 4K Anime Crew by BinsentoOmosura (1).jpg', 'Kessoku Band Wallpaper', '#desktop #wallpaper', '', '2024-07-19 17:29:58'),
+(44, 123, 'Astolfo_reading_ABAP_objects.png', 'Astolfo Reading', '#book #trap', '', '2024-07-19 17:30:28'),
+(46, 123, 'sunaookami-shiroko-blue-archive-v0-mnsvdd9qraw91.png', 'Shiroko Winter', 'Pov me, wkwk #shiroko #winter', '', '2024-07-19 17:31:40'),
+(47, 123, 'Bocchi_the_rock_Hitori_Gotoh_the_c++_programming_language.png', 'Bocchi Holding CPP Book', '#book #meme #animegirl', '', '2024-07-19 17:32:31'),
+(48, 123, 'Kawaii Shiroko - pixiv.jpg', 'Shiroko', '#animegirl', '', '2024-07-19 17:33:00'),
+(49, 123, 'Bocchi Py.jpg', 'Python Is Bocchi Reference?!', '#anime #python #meme', '', '2024-07-19 17:33:34'),
+(50, 123, 'Polite cat.jpeg', 'Beluga Cat', '#beluga #cat', '', '2024-07-19 17:34:02'),
+(51, 123, 'bocchi-turu.jpg', 'Bocchi Turu', '#turu', '', '2024-07-19 17:35:28');
+
 -- --------------------------------------------------------
 
 --
@@ -128,8 +145,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`) VALUES
-(87, 'admin', 'Admin', 'default.png', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '7197610153'),
-(123, 'yefta', 'Yefta Asyel', 'default.png', 'hehehe', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '1627790263');
+(87, 'admin', 'Admin', 'default.png', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0'),
+(123, 'yefta', 'Yefta Asyel', 'default.png', 'hehehehe', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0');
 
 --
 -- Indexes for dumped tables
@@ -205,7 +222,7 @@ ALTER TABLE `otp`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -217,7 +234,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
 
 --
 -- Constraints for dumped tables
@@ -260,7 +277,7 @@ DELIMITER $$
 --
 -- Events
 --
-CREATE EVENT `hapus_data_nonaktif` ON SCHEDULE EVERY 1 MINUTE STARTS '2024-06-01 13:43:44' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+CREATE DEFINER=`root`@`localhost` EVENT `hapus_data_nonaktif` ON SCHEDULE EVERY 1 MINUTE STARTS '2024-06-01 13:43:44' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     DELETE FROM users WHERE status = 'Nonaktif' AND delete_in <= NOW();
 END$$
 
