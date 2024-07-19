@@ -136,6 +136,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     <?php
     if(isset($_SESSION['level_id'])){
         if($_SESSION['level_id'] == 2){
+            if(isset($_GET['pesan'])){
+                if($_GET['pesan'] == 'oversize'){
+                    echo "<div class='alert alert-danger'>Ukuran file terlalu besar. Maksimal $size_in_kb KB.</div>";
+                }elseif($_GET['pesan'] == 'unsupportedfile'){
+                    echo "<div class='alert alert-danger'>Format file tidak didukung. Hanya menerima file JPG, JPEG, PNG, dan GIF.</div>";
+                }
+            }
             // halaman posting khusus user
             ?>
             <!-- Main Content -->
