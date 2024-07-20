@@ -439,6 +439,26 @@ body {
     display: none;
 }
 
+.report-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.report-button i {
+  margin-right: 5px; /* Jarak antara ikon dan teks */
+}
+
+.report-button:hover {
+  background-color: #d0d0d0;
+}
+
 .content-card:hover .delete-button {
     display: block;
 }
@@ -446,3 +466,7 @@ body {
 .content-card:hover .undo-button {
     display: block;
 }
+
+/* .content-card:hover .report-button {
+    display: block;
+} */

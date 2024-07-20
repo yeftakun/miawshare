@@ -26,6 +26,10 @@ if(isset($_GET['page']) && isset($_GET['id'])) {
             $table = 'users';
             $id_column = 'user_id';
             break;
+        case 'report':
+            $table = 'reports';
+            $id_column = 'report_id';
+            break;
         default:
             // Jika nilai page tidak sesuai, beri respon dengan status error
             http_response_code(400);

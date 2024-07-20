@@ -3,8 +3,57 @@ session_start();
 $lama = '';
 include '../koneksi.php';
 
+// Memeriksa apakah pengguna sudah melaporkan postingan ini sebelumnya
+$isReported = false;
+if (isset($_SESSION['user_name']) && isset($_GET['post_id'])) {
+    $post_id_reported = mysqli_real_escape_string($koneksi, $_GET['post_id']);
+    $user_name_reporter = mysqli_real_escape_string($koneksi, $_SESSION['user_name']);
+    
+    $queryCheckReport = "SELECT 1 FROM reports WHERE post_id_reported = ? AND user_name_reporter = ?";
+    $stmtCheck = mysqli_prepare($koneksi, $queryCheckReport);
+    if ($stmtCheck) {
+        mysqli_stmt_bind_param($stmtCheck, 'ss', $post_id_reported, $user_name_reporter);
+        mysqli_stmt_execute($stmtCheck);
+        mysqli_stmt_store_result($stmtCheck);
+        if (mysqli_stmt_num_rows($stmtCheck) > 0) {
+            $isReported = true;
+        }
+        mysqli_stmt_close($stmtCheck);
+    }
+}
+
+// Tangani pengiriman laporan
+if (isset($_POST['action']) && $_POST['action'] === 'report') {
+    if ($isReported) {
+        echo 'already_reported';
+    } else {
+        $user_name_reported = mysqli_real_escape_string($koneksi, $_POST['user_name_reported']);
+        $post_id_reported = mysqli_real_escape_string($koneksi, $_POST['post_id_reported']);
+        $post_reported = mysqli_real_escape_string($koneksi, $_POST['post_reported']);
+        $user_name_reporter = mysqli_real_escape_string($koneksi, $_POST['user_name_reporter']);
+
+        // Siapkan query untuk memasukkan laporan
+        $query = "INSERT INTO reports (user_name_reported, post_id_reported, post_reported, user_name_reporter) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($koneksi, $query);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 'ssss', $user_name_reported, $post_id_reported, $post_reported, $user_name_reporter);
+            if (mysqli_stmt_execute($stmt)) {
+                echo 'report_successful';
+            } else {
+                echo 'error: ' . mysqli_stmt_error($stmt);
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo 'error_preparing_statement: ' . mysqli_error($koneksi);
+        }
+    }
+    mysqli_close($koneksi);
+    exit; // Hentikan eksekusi setelah menangani laporan
+}
+
+
 // Query untuk mengambil data gambar dan informasi pengguna
-if (isset($_GET['post_id'])) { // jika header ada parameter post_id
+if (isset($_GET['post_id'])) {
     $postId = mysqli_real_escape_string($koneksi, $_GET['post_id']);
     $query = "SELECT users.user_name, users.name, users.user_profile_path, posts.* 
               FROM posts 
@@ -19,42 +68,29 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
         $resultTime = mysqli_query($koneksi, $queryTime);
         $rowTime = mysqli_fetch_assoc($resultTime);
 
-        // Waktu posting
         $postingTime = strtotime($row['create_in']);
-
-        // Waktu saat ini
         $currentTime = strtotime($rowTime['timenow']);
-
-        // Hitung selisih waktu dalam detik
         $timeDifference = $currentTime - $postingTime;
 
-        // Ubah selisih waktu menjadi format yang diinginkan
         if ($timeDifference < 60) {
-            // Baru saja
             $timeAgo = "Baru saja";
         } elseif ($timeDifference < 3600) {
-            // Tampilkan hanya dalam menit
             $minutes = floor($timeDifference / 60);
             $timeAgo = "$minutes mnt";
         } elseif ($timeDifference < 86400) {
-            // Tampilkan hanya dalam jam
             $hours = floor($timeDifference / 3600);
             $timeAgo = "$hours j";
         } elseif ($timeDifference < 2592000) {
-            // Tampilkan hanya dalam hari
             $days = floor($timeDifference / 86400);
             $timeAgo = "$days hri";
         } elseif ($timeDifference < 31536000) {
-            // Tampilkan hanya dalam bulan
             $months = floor($timeDifference / 2592000);
             $timeAgo = "$months bln";
         } else {
-            // Tampilkan hanya dalam tahun
             $years = floor($timeDifference / 31536000);
             $timeAgo = "$years thn";
         }
-
-        ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -76,6 +112,48 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
     <link rel="icon" type="image/png" href="../assets/logo/logo.png" />
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <script src="../script/script.js" defer></script> 
+    <script>
+        // Fungsi untuk menangani pengiriman laporan
+        function reportImage() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            var user_name_reported = '<?php echo $row['user_name']; ?>';
+            var post_id_reported = '<?php echo $row['post_id']; ?>';
+            var post_reported = '<?php echo $row['post_title']; ?>';
+            var user_name_reporter = '<?php echo $_SESSION['user_name']; ?>';
+
+            xhr.send('action=report&user_name_reported=' + encodeURIComponent(user_name_reported) +
+                    '&post_id_reported=' + encodeURIComponent(post_id_reported) +
+                    '&post_reported=' + encodeURIComponent(post_reported) +
+                    '&user_name_reporter=' + encodeURIComponent(user_name_reporter));
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    if (xhr.responseText === 'report_successful') {
+                        alert('Laporan berhasil dikirim.');
+                        location.reload(); // Reload halaman untuk memperbarui status laporan
+                    } else if (xhr.responseText === 'already_reported') {
+                        alert('Anda sudah membuat laporan untuk data postingan ini.');
+                    } else {
+                        alert('Gagal mengirim laporan: ' + xhr.responseText);
+                    }
+                } else {
+                    alert('Gagal mengirim laporan.');
+                }
+            };
+        }
+
+        // Cek status laporan saat DOM sudah dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            var isReported = <?php echo json_encode($isReported); ?>;
+            if (isReported) {
+                // Tidak perlu alert di sini, sudah ditangani oleh response dari reportImage function
+            }
+        });
+
+    </script>
 </head>
 <body>
     <br><br><br><br>
@@ -102,6 +180,15 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
                     ?>
                     <a class="download-button" href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>Download Image</a>
                     <button class="copy-link-button" id="copyButton"><i class='bx bx-link-alt'></i></button>
+                    <?php
+                    if (isset($_SESSION['user_name'])){
+                        ?>
+                        <button class="report-button" id="reportButton" onclick="reportImage()">
+                            <i class='bx bxs-flag-alt'></i>
+                        </button>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
             <button class="undo-button" id="undoButton"><i class='bx bxs-chevron-left'></i></button>
@@ -221,33 +308,32 @@ if (isset($_GET['post_id'])) { // jika header ada parameter post_id
 
             <div class="sidebar_profile flex">
                 <a href="<?php
-                if (isset($_SESSION['level_id'])) {
+                if(isset($_SESSION['level_id'])){
                     echo "profile.php?user_name=", $_SESSION['user_name'];
-                } else {
+                }else{
                     echo "#";
                 }
                 ?>">
                     <span class="nav_image">
-                        <img src="
-                        <?php
-                        if (isset($_SESSION['level_id'])) {
-                            echo '../storage/profile/' . $_SESSION['user_profile_path'];
-                        } else {
-                            echo '../storage/profile/default.png';
-                        }
-                        ?>" alt="logo_img" />
+                    <img src="
+                    <?php
+                    if(isset($_SESSION['level_id'])){
+                        echo '../storage/profile/' . $_SESSION['user_profile_path'];
+                    }else{
+                        echo '../storage/profile/default.png';
+                    }
+                    ?>" alt="logo_img" />
                     </span>
                     <div class="data_text">
-                        <span class="name">
+                    <span class="name">
                         <?php
-                        if (isset($_SESSION['level_id'])) {
+                        if(isset($_SESSION['level_id'])){
                             echo $_SESSION['user_name'];
-                        } else {
+                        }else{
                             echo 'Guest';
                         }
                         ?>
-                        </span>
-                    </div>
+                    </span>
                 </a>
             </div>
         </div>

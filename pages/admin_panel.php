@@ -19,6 +19,10 @@ $resultPosts = mysqli_query($koneksi, $queryPosts);
 $queryUsers = "SELECT * FROM users";
 $resultUsers = mysqli_query($koneksi, $queryUsers);
 
+// query data report
+$queryReport = "SELECT * FROM reports";
+$resultReport = mysqli_query($koneksi, $queryReport);
+
 $levelRowIsEmpty = "";
 
 
@@ -121,6 +125,7 @@ if(isset($_SESSION['level_id'])) {
         <div class="right-menu">
             <a href="#levelSection">Level</a>
             <a href="#otpSection">OTP</a>
+            <a href="#reportSection">Report</a>
             <a href="#postsSection">Posts</a>
             <a href="#usersSection">Users</a>
         </div>
@@ -190,6 +195,42 @@ if(isset($_SESSION['level_id'])) {
                         echo "<td>".$rowOtp['otp_code']."</td>";
                         echo "<td>".$rowOtp['to_use']."</td>";
                         echo "<td><a class='deleteBtn' data-id='".$rowOtp['id']."' data-page='otp'>Delete</a></td>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>Data tidak ditemukan</td></tr>";
+                }
+                ?>
+            </table>
+        </div>
+    </div>
+    <div class="container">
+        <div id="reportSection" class="table-container">
+            <h2>Report Post Table</h2>
+            <table id="reportTable" style="width:100%;border-collapse:collapse;">
+                <?php
+                if (mysqli_num_rows($resultReport) > 0) {
+                    echo "<tr class='GridViewScrollHeader'>";
+                    echo "<th>User Name</th><th>PostID Reported</th><th>Post Reported</th><th>Reporter</th><th>Control</th></tr>";
+                    while($rowReport = mysqli_fetch_assoc($resultReport)) {
+                        echo "<tr class='GridViewScrollItem'>";
+                        ?>
+                        <td>
+                            <a href="<?php echo "profile.php?user_name=", $rowReport['user_name_reported']; ?>">
+                                <?php echo $rowReport['user_name_reported']; ?>
+                            </a>
+                        </td>
+                        <?php
+                        // echo "<td><a>".$rowReport['user_name_reported']."</a></td>";
+                        // echo "<td>".$rowReport['post_id_reported']."</td>";
+                        ?>
+                        <td>
+                            <a href="<?php echo "view_img.php?post_id=", $rowReport['post_id_reported']; ?>">
+                                <?php echo $rowReport['post_reported']; ?>
+                            </a>
+                        <?php
+                        // echo "<td>".$rowReport['post_reported']."</td>";
+                        echo "<td>".$rowReport['user_name_reporter']."</td>";
+                        echo "<td><a class='deleteBtn' data-id='".$rowReport['report_id']."' data-page='report'>Biarin</a> | <a class='deleteBtn' data-id='".$rowReport['post_id_reported']."' data-page='posts'>Hapus Post</a></td>";
                     }
                 } else {
                     echo "<tr><td colspan='4'>Data tidak ditemukan</td></tr>";
