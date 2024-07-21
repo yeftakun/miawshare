@@ -262,7 +262,98 @@ if (isset($_GET['post_id'])) {
             line-height: 24px; /* Sesuaikan dengan font-size tombol untuk memastikan teks berada di tengah */
         }
 
+        /* POPUP MENU */
+        /* .menu-btn {
+            display: inline-block;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin: 20px;
+        } */
 
+        .menu-button {
+            /* Style dasar tombol */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 1.5em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s ease-in-out; /* Transisi halus untuk transformasi */
+            font-size: 24px;
+        }
+
+        .menu-button:active {
+            transform: scale(0.9); /* Skala tombol sedikit lebih kecil saat ditekan */
+        }
+
+
+        .popup {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 200px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        
+        .popup ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .popup li {
+            /* Menghapus garis batas */
+            border-bottom: none;
+        }
+        
+        .popup a,
+        .popup button {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px; /* Ukuran font yang lebih kecil */
+            transition: background-color 0.3s, box-shadow 0.3s; /* Transisi halus untuk efek hover */
+            border: none; /* Menghapus border dari button */
+            background: none; /* Menghapus latar belakang default dari button */
+            text-align: left; /* Memastikan teks pada button di-align kiri */
+            width: 100%; /* Memastikan button memenuhi lebar li */
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-weight: bold; /* Make the font bold */
+        }
+
+        .popup a:hover,
+        .popup button:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* Efek latar belakang pada hover */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Bayangan pada hover */
+            border-radius: 5px; /* Border-radius pada hover */
+        }
+
+        .popup.show {
+            display: block;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -302,7 +393,62 @@ if (isset($_GET['post_id'])) {
                 }
                 ?>
                 <div class="button-group">
-                    <?php
+                    <!-- <button class="menu-button"><i class='bx bx-menu' ></i></button> -->
+                    <button class="menu-button" id="menuBtn"><i class='bx bx-menu' ></i></button>
+                    <div class="popup" id="popupMenu">
+                        <ul>
+                            <li><a href="../storage/posting/<?php echo $row['post_img_path']; ?>" download><i class='bx bxs-download'></i> Download gambar</i></a></li>
+                            <li><a href="" id="copyButton"><i class='bx bx-copy' ></i> Copy Link</a></li>
+                            <li><a href="" id="copyAddressButton"><i class='bx bx-copy' ></i> Copy Image Address</a></li>
+                            <?php
+                            if (isset($_SESSION['user_name'])){
+                                ?>
+                                <li>
+                                    <a href="" id="reportButton" onclick="reportImage()"><i class='bx bx-flag' ></i> Laporkan gambar</a>
+                                </li>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                            if (isset($_SESSION['user_name']) && $_SESSION['user_name'] == $row['user_name']) {
+                                ?>
+                                <i>
+                                    <!-- <li><a href="" onclick="showConfirmationModal()">Hapus gambar</a></li> -->
+                                    <button class="del-btn" onclick="showConfirmationModal()"><i class='bx bx-trash-alt' ></i> Hapus gambar</button>
+                                </i>
+                                <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <div class="overlay" id="overlay"></div>
+
+                    <script>
+                        document.getElementById('menuBtn').addEventListener('click', function(event) {
+                            event.stopPropagation();
+                            var popup = document.getElementById('popupMenu');
+                            var overlay = document.getElementById('overlay');
+                            popup.classList.toggle('show');
+                            overlay.classList.toggle('show');
+                        });
+
+                        document.getElementById('overlay').addEventListener('click', function() {
+                            document.getElementById('popupMenu').classList.remove('show');
+                            this.classList.remove('show');
+                        });
+
+                        document.addEventListener('click', function(event) {
+                            var popup = document.getElementById('popupMenu');
+                            var menuBtn = document.getElementById('menuBtn');
+                            if (!popup.contains(event.target) && !menuBtn.contains(event.target)) {
+                                popup.classList.remove('show');
+                                document.getElementById('overlay').classList.remove('show');
+                            }
+                        });
+                    </script>
+
+                    <!-- TOMBOL PINDAH KE MENU -->
+                    <!-- <?php
                     if (isset($_SESSION['user_name']) && $_SESSION['user_name'] == $row['user_name']) {
                         ?>
                         <button class="delete-button" onclick="showConfirmationModal()"><i class='bx bx-trash' ></i></button>
@@ -319,7 +465,7 @@ if (isset($_GET['post_id'])) {
                         </button>
                         <?php
                     }
-                    ?>
+                    ?> -->
                 </div>
             </div>
             <button class="undo-button" id="undoButton"><i class='bx bxs-chevron-left'></i></button>
@@ -331,10 +477,10 @@ if (isset($_GET['post_id'])) {
         <!-- Modal konfirmasi penghapusan -->
         <div id="confirmationModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeConfirmationModal()">&times;</span>
+                <!-- <span class="close" onclick="closeConfirmationModal()">&times;</span> -->
                 <p>Apakah Anda yakin ingin menghapus gambar ini?</p>
                 <div class="button-container">
-                    <button onclick="deleteImage()">Ya</button>
+                    <button class="confirmButton" onclick="deleteImage()">Ya</button>
                 </div>
             </div>
         </div>
@@ -543,6 +689,51 @@ if (isset($_GET['post_id'])) {
         window.location.href = "../index.php?pesan=needlogin";
     }
 </script>
+
+<!-- COPY ALAMAT GAMBAR -->
+
+<!-- Elemen input tersembunyi untuk menyimpan URL gambar -->
+<input type="text" id="imageURL" style="position: absolute; left: -9999px;">
+
+<script>
+document.getElementById("copyAddressButton").addEventListener("click", function() {
+    // Mendapatkan URL halaman
+    var url = window.location.href;
+    
+    // Mendapatkan path gambar dari PHP
+    var imgPath = "<?php echo '../storage/posting/' . $row['post_img_path']; ?>";
+    
+    // Menghapus 'pages/' dari URL
+    var baseURL = url.replace(/\/pages\//, "/");
+    
+    // Menggabungkan URL yang diubah dengan path gambar
+    var copyText = baseURL.substring(0, baseURL.lastIndexOf("/") + 1) + imgPath.replace("../", "");
+
+    // Mengganti spasi dengan %20
+    copyText = copyText.replace(/ /g, "%20");
+    
+    // Membuat elemen textarea yang tidak terlihat
+    var textarea = document.createElement("textarea");
+    textarea.value = copyText;
+    document.body.appendChild(textarea);
+    
+    // Memilih teks dalam textarea
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // Untuk perangkat mobile
+    
+    // Menyalin teks yang dipilih ke clipboard
+    document.execCommand("copy");
+    
+    // Menghapus elemen textarea yang dibuat
+    document.body.removeChild(textarea);
+    
+    // Memberi tahu pengguna bahwa URL telah disalin
+    alert("Link gambar berhasil disalin ke clipboard");
+});
+</script>
+
+
+
 <script src="../script/alert-time.js"></script>
 <script src="../script/copy-to-clipboard.js"></script>
 

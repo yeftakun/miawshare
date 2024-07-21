@@ -425,6 +425,20 @@ body {
     display: none;
 }
 
+.menu-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: block;
+}
+
 .undo-button {
     position: absolute;
     top: 10px;
@@ -460,7 +474,8 @@ body {
 }
 
 .content-card:hover .delete-button {
-    display: block;
+    /* display: block; */
+    display: none; /*disable*/
 }
 
 .content-card:hover .undo-button {

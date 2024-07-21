@@ -9,7 +9,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Transparan */
-    z-index: 999; /* Pastikan modal muncul di atas konten */
+    z-index: 1000; /* Pastikan modal muncul di atas konten lain */
 }
 
 .modal {
@@ -18,6 +18,7 @@
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
+    z-index: 1001; /* Pastikan modal berada di atas modal-container dan elemen lain */
 }
 
 .close {
@@ -25,5 +26,35 @@
     top: 8px;
     right: 8px;
     cursor: pointer;
-    display: none;
+}
+
+/* BLOCK BUTTON */
+.confirmButton {
+    background-color: #ff4d4d; /* Warna merah untuk tombol blokir */
+    color: white; /* Warna teks putih */
+    border: none; /* Tanpa border */
+    padding: 5px 10px; /* Padding pada tombol */
+    font-size: 14px; /* Ukuran font */
+    cursor: pointer; /* Pointer pada hover */
+    border-radius: 5px; /* Border radius untuk rounded corners */
+    transition: background-color 0.3s ease; /* Transisi halus untuk perubahan warna */
+    margin-top: 10px;
+}
+
+.confirmButton:hover {
+    background-color: #ff1a1a; /* Warna saat dihover */
+}
+
+.confirmButton:active {
+    background-color: #e60000; /* Warna saat di klik */
+}
+
+.confirmButton:focus {
+    outline: none; /* Menghilangkan outline default saat tombol di fokus */
+    box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.5); /* Shadow untuk fokus */
+}
+
+.confirmButton:disabled {
+    background-color: #ffcccc; /* Warna saat tombol dinonaktifkan */
+    cursor: not-allowed; /* Cursor tidak diijinkan */
 }
