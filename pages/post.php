@@ -10,6 +10,22 @@ $max_image_size = MAX_IMAGE_SIZE;
 $size_in_kb = $max_image_size / 1000;
 $errorMsg = '';
 
+// Cek kembali status user dengan mengupdate session dari database
+if(isset($_SESSION['user_id'])){
+    $user_id = $_SESSION['user_id'];
+    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+    $result = mysqli_query($koneksi, $query);
+    $user = mysqli_fetch_assoc($result);
+    $_SESSION['status'] = $user['status'];
+}
+
+// Ketika status user "Suspended" atau "Banned", redirect ke halaman error
+if(isset($_SESSION['status'])){
+    if($_SESSION['status'] == 'Suspended'){
+        header("location:error/deniedpage.php");
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
     // init dan ambil data dari form
     $post_title = $_POST['post_title'];
