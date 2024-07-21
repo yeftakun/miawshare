@@ -192,8 +192,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="tele_chat_id">ChatID Telegram:</label>
                 <input type="number" id="tele_chat_id" name="tele_chat_id" required>
             </div>
-            <p>Dapatkan <a href="https://t.me/chatIDrobot" target="_blank">ChatID</a></p>
-            <p>Tulis apapun di <a href="https://t.me/spamtestingbot" target="_blank">Bot Notifikasi</a></p>
+            <p class="inilink">Dapatkan <a href="https://t.me/chatIDrobot" target="_blank">ChatID</a></p>
+            <p class="inilink">Tulis apapun di <a href="https://t.me/spamtestingbot" target="_blank">Bot Notifikasi</a></p>
             <div class="form-group">
                 <label for="username">Username</label>
                 <!-- <input type="text" id="username" name="username" required> -->
@@ -204,6 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" id="password" name="password" required>
                 <button type="button" id="togglePassword" class="toggle-password">Show</button>
             </div>
+            <p class="terms">Dengan membuat akun, anda setuju dengan<a href="pages/terms.php"> ketentuan penggunaan kami.</a></p>
             <button type="submit">Buat</button>
             <p id="mendaftar">Sudah punya akun? <a href="index.php">Kembali</a></p>
             <p id="verify"><a href="verif-otp.php">Verifikasi</a></p>
