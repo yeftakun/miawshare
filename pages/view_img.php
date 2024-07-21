@@ -51,6 +51,43 @@ if (isset($_POST['action']) && $_POST['action'] === 'report') {
     exit; // Hentikan eksekusi setelah menangani laporan
 }
 
+// Tangani aksi like dan dislike
+if (isset($_POST['action']) && ($_POST['action'] === 'like' || $_POST['action'] === 'dislike')) {
+    $post_id = mysqli_real_escape_string($koneksi, $_POST['post_id']);
+    $user_name = mysqli_real_escape_string($koneksi, $_SESSION['user_name']);
+
+    if ($_POST['action'] === 'like') {
+        $query = "INSERT INTO likes (liked_post_id, liked_user_name) VALUES (?, ?)";
+        $stmt = mysqli_prepare($koneksi, $query);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 'is', $post_id, $user_name);
+            if (mysqli_stmt_execute($stmt)) {
+                echo 'like_successful';
+            } else {
+                echo 'error: ' . mysqli_stmt_error($stmt);
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo 'error_preparing_statement: ' . mysqli_error($koneksi);
+        }
+    } elseif ($_POST['action'] === 'dislike') {
+        $query = "DELETE FROM likes WHERE liked_post_id = ? AND liked_user_name = ?";
+        $stmt = mysqli_prepare($koneksi, $query);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 'is', $post_id, $user_name);
+            if (mysqli_stmt_execute($stmt)) {
+                echo 'dislike_successful';
+            } else {
+                echo 'error: ' . mysqli_stmt_error($stmt);
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo 'error_preparing_statement: ' . mysqli_error($koneksi);
+        }
+    }
+    mysqli_close($koneksi);
+    exit; // Hentikan eksekusi setelah menangani aksi like/dislike
+}
 
 // Query untuk mengambil data gambar dan informasi pengguna
 if (isset($_GET['post_id'])) {
@@ -63,6 +100,26 @@ if (isset($_GET['post_id'])) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
+
+        // Hitung jumlah like
+        $queryLikes = "SELECT COUNT(*) as like_count FROM likes WHERE liked_post_id = '$postId'";
+        $resultLikes = mysqli_query($koneksi, $queryLikes);
+        $likeCount = 0;
+        if ($resultLikes) {
+            $rowLikes = mysqli_fetch_assoc($resultLikes);
+            $likeCount = $rowLikes['like_count'];
+        }
+
+        // Cek apakah pengguna sudah menyukai gambar ini
+        $isLiked = false;
+        if (isset($_SESSION['user_name'])) {
+            $user_name = $_SESSION['user_name'];
+            $queryCheckLike = "SELECT 1 FROM likes WHERE liked_post_id = '$postId' AND liked_user_name = '$user_name'";
+            $resultCheckLike = mysqli_query($koneksi, $queryCheckLike);
+            if ($resultCheckLike && mysqli_num_rows($resultCheckLike) > 0) {
+                $isLiked = true;
+            }
+        }
 
         $queryTime = "SELECT current_timestamp() as timenow;";
         $resultTime = mysqli_query($koneksi, $queryTime);
@@ -125,35 +182,88 @@ if (isset($_GET['post_id'])) {
             var user_name_reporter = '<?php echo $_SESSION['user_name']; ?>';
 
             xhr.send('action=report&user_name_reported=' + encodeURIComponent(user_name_reported) +
-                    '&post_id_reported=' + encodeURIComponent(post_id_reported) +
-                    '&post_reported=' + encodeURIComponent(post_reported) +
-                    '&user_name_reporter=' + encodeURIComponent(user_name_reporter));
+                      '&post_id_reported=' + encodeURIComponent(post_id_reported) +
+                      '&post_reported=' + encodeURIComponent(post_reported) +
+                      '&user_name_reporter=' + encodeURIComponent(user_name_reporter));
 
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     if (xhr.responseText === 'report_successful') {
-                        alert('Laporan berhasil dikirim.');
-                        location.reload(); // Reload halaman untuk memperbarui status laporan
+                        alert('Laporan berhasil dikirim');
                     } else if (xhr.responseText === 'already_reported') {
                         alert('Anda sudah membuat laporan untuk data postingan ini.');
                     } else {
-                        alert('Gagal mengirim laporan: ' + xhr.responseText);
+                        alert('Terjadi kesalahan. Coba lagi nanti.');
                     }
                 } else {
-                    alert('Gagal mengirim laporan.');
+                    alert('Terjadi kesalahan. Coba lagi nanti.');
                 }
             };
         }
 
-        // Cek status laporan saat DOM sudah dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            var isReported = <?php echo json_encode($isReported); ?>;
-            if (isReported) {
-                // Tidak perlu alert di sini, sudah ditangani oleh response dari reportImage function
-            }
-        });
+        // Fungsi untuk menangani aksi like dan dislike
+        function toggleLike() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
+            var post_id = '<?php echo $row['post_id']; ?>';
+            var action = '<?php echo $isLiked ? 'dislike' : 'like'; ?>';
+
+            xhr.send('action=' + action + '&post_id=' + encodeURIComponent(post_id));
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    if (xhr.responseText === 'like_successful' || xhr.responseText === 'dislike_successful') {
+                        location.reload();
+                    } else {
+                        alert('Terjadi kesalahan. Coba lagi nanti.');
+                    }
+                } else {
+                    alert('Terjadi kesalahan. Coba lagi nanti.');
+                }
+            };
+        }
     </script>
+    <style>
+        /* LIKE BUTTON */
+        .like-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .like-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-right: 5px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .like-button i {
+            transition: color 0.3s ease;
+        }
+
+        .like-button i.bx.bxs-heart {
+            color: red;
+        }
+
+        .like-button i.bx.bx-heart {
+            color: black;
+        }
+
+        .like-container span {
+            font-size: 16px;
+            color: #333;
+            line-height: 24px; /* Sesuaikan dengan font-size tombol untuk memastikan teks berada di tengah */
+        }
+
+
+    </style>
 </head>
 <body>
     <br><br><br><br>
@@ -170,6 +280,27 @@ if (isset($_GET['post_id'])) {
                 </a>
                 <h2 class="content-title"><?php echo $row['post_title']; ?></h2>
                 <p class="content-description"><?php echo $row['post_description']; ?></p>
+                <?php
+                if (isset($_SESSION['user_name'])){
+                    ?>
+                    <div class="like-container">
+                        <button class="like-button" onclick="toggleLike()">
+                            <i class='<?php echo $isLiked ? 'bx bxs-heart' : 'bx bx-heart'; ?>' style='color:<?php echo $isLiked ? 'red' : 'black'; ?>'></i>
+                        </button>
+                        <span><?php echo $likeCount; ?></span>
+                    </div>
+                    <?php
+                }else{
+                    ?>
+                    <div class="like-container">
+                        <button class="like-button" onclick="needlogin()">
+                            <i class='<?php echo $isLiked ? 'bx bxs-heart' : 'bx bx-heart'; ?>' style='color:<?php echo $isLiked ? 'red' : 'black'; ?>'></i>
+                        </button>
+                        <span><?php echo $likeCount; ?></span>
+                    </div>
+                    <?php
+                }
+                ?>
                 <div class="button-group">
                     <?php
                     if (isset($_SESSION['user_name']) && $_SESSION['user_name'] == $row['user_name']) {
@@ -178,7 +309,7 @@ if (isset($_GET['post_id'])) {
                         <?php
                     }
                     ?>
-                    <a class="download-button" href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>Download Image</a>
+                    <a class="download-button" href="../storage/posting/<?php echo $row['post_img_path']; ?>" download>Download</i></a>
                     <button class="copy-link-button" id="copyButton"><i class='bx bx-link-alt'></i></button>
                     <?php
                     if (isset($_SESSION['user_name'])){
@@ -406,6 +537,11 @@ if (isset($_GET['post_id'])) {
     document.getElementById("undoButton").addEventListener("click", function() {
         window.history.back();
     });
+</script>
+<script>
+    function needlogin() {
+        window.location.href = "../index.php?pesan=needlogin";
+    }
 </script>
 <script src="../script/alert-time.js"></script>
 <script src="../script/copy-to-clipboard.js"></script>
