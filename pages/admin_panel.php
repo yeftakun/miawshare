@@ -210,7 +210,7 @@ if(isset($_SESSION['level_id'])) {
                 <?php
                 if (mysqli_num_rows($resultReport) > 0) {
                     echo "<tr class='GridViewScrollHeader'>";
-                    echo "<th>User Name</th><th>PostID Reported</th><th>Post Reported</th><th>Reporter</th><th>Control</th></tr>";
+                    echo "<th>User Name</th><th>Post Reported</th><th>Reporter</th><th>Control</th></tr>";
                     while($rowReport = mysqli_fetch_assoc($resultReport)) {
                         echo "<tr class='GridViewScrollItem'>";
                         ?>
@@ -229,7 +229,14 @@ if(isset($_SESSION['level_id'])) {
                             </a>
                         <?php
                         // echo "<td>".$rowReport['post_reported']."</td>";
-                        echo "<td>".$rowReport['user_name_reporter']."</td>";
+                        // echo "<td>".$rowReport['user_name_reporter']."</td>";
+                        ?>
+                        <td>
+                            <a href="<?php echo "profile.php?user_name=", $rowReport['user_name_reporter']; ?>">
+                                <?php echo $rowReport['user_name_reporter']; ?>
+                            </a>
+                        </td>
+                        <?php
                         echo "<td><a class='deleteBtn' data-id='".$rowReport['report_id']."' data-page='report'>Biarin</a> | <a class='deleteBtn' data-id='".$rowReport['post_id_reported']."' data-page='posts'>Hapus Post</a></td>";
                     }
                 } else {
