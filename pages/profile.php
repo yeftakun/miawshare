@@ -36,6 +36,23 @@ if(isset($_GET['user_name'])) {
         header("Location: error/not_found.php");
         exit();
     }
+
+    // Query untuk mendapatkan total like dari user
+    $getTotalLikeQuery = "SELECT SUM(total_likes) AS total_likes_sum FROM (
+                            SELECT COUNT(l.liked_post_id) AS total_likes FROM posts p
+                            LEFT JOIN likes l ON p.post_id = l.liked_post_id
+                            JOIN users u ON p.user_id = u.user_id
+                            WHERE u.user_name = 'yefta'
+                            GROUP BY p.post_id
+                        ) AS likes_summary";
+    $getTotalLikeResult = mysqli_query($koneksi, $getTotalLikeQuery);
+    // pastikan ada hasil dari query total like
+    if(mysqli_num_rows($getTotalLikeResult) > 0) {
+        $totalLike = mysqli_fetch_assoc($getTotalLikeResult);
+    } else {
+        $totalLike = 0;
+    }
+
 } else {
     // Redirect ke halaman lain jika user_name tidak disediakan
     // header("Location: error/not_found.php");
@@ -58,13 +75,22 @@ if(isset($_GET['user_name'])) {
     <meta property="og:image" content="https://miawshare.my.id/storage/profile/<?php echo $user_profile_path; ?>" />
     <link rel="stylesheet" href="../styles/profil.css">
     <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/alert.css">
     <link rel="icon" type="image/png" href="../assets/logo/logo.png">
+    <link rel="stylesheet" href="../styles/modal-view-img.css">
 
     <!-- Boxicons CSS -->
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     </head>
     
     <body>
+        <?php
+        if(isset($_GET['pesan'])){
+            if($_GET['pesan']=="success_block"){
+                echo "<div class='done'>Pergguna berhasil di batasi</div>";
+            }
+        }
+        ?>
         <!-- Profil Pengguna -->
     <nav class="user-profile">
         <div class="profile-picture">
@@ -86,8 +112,8 @@ if(isset($_GET['user_name'])) {
               <li><a href="" id="copyButton">Bagikan</a></li>
             </ul>
           </nav>
-          </div>
-            <?php
+        </div>
+        <?php
                 if ($level_id == 1) {
                     ?>
                     <div class="info">
@@ -100,10 +126,33 @@ if(isset($_GET['user_name'])) {
                     <div class="info">
                         <p>Pengguna MiawShare</p>
                     </div>
+                    <p>Likes: <?php echo $totalLike['total_likes_sum']; ?></p>
+                    <?php
+                    // Jika yang melihat admin, tampilkan tombol blokir
+                    if ($status == 'Suspended'){
+                        ?>
+                        <p style="color: red;">Pengguna dibatasi</p>
+                        <?php
+                        if (isset($_SESSION['level_id']) && $_SESSION['level_id'] == 1) {
+                            ?>
+                            <!-- <a href="crud/block_user.php?user_id=<?php echo $user_id; ?>" class="block-button">Blokir Pengguna</a> -->
+                            <button class="unblockButton" onclick="showConfirmationUnBlockModal()">Aktifkan</button>
+                            <?php
+                        }
+                    }else{
+                        if (isset($_SESSION['level_id']) && $_SESSION['level_id'] == 1) {
+                            ?>
+                            <!-- <a href="crud/block_user.php?user_id=<?php echo $user_id; ?>" class="block-button">Blokir Pengguna</a> -->
+                            <button class="blockButton" onclick="showConfirmationBlockModal()">Batasi Pengguna</button>
+                            <?php
+                        }
+                    }
+                    ?>
                     <?php
                 }
-            ?>
+                ?>
       </nav>
+
       
       <?php
         if($totalPost > 0){
@@ -130,6 +179,32 @@ if(isset($_GET['user_name'])) {
             <?php
         }
         ?>
+        <!-- Modal container -->
+          <div id="modalContainerBlock" class="modal-container" style="display: none;">
+              <!-- Modal konfirmasi penghapusan -->
+              <div id="confirmationModal" class="modal">
+                  <div class="modal-content">
+                      <!-- <span class="close" onclick="closeConfirmationModal()">&times;</span> -->
+                      <p>Membatasi pengguna?</p>
+                      <div class="button-container">
+                          <button class="blockButton" onclick="blockUserButton()">Ya</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div id="modalContainerUnBlock" class="modal-container" style="display: none;">
+              <!-- Modal konfirmasi penghapusan -->
+              <div id="confirmationModal" class="modal">
+                  <div class="modal-content">
+                      <!-- <span class="close" onclick="closeConfirmationModal()">&times;</span> -->
+                      <p>Mengaktifkan pengguna?</p>
+                      <div class="button-container">
+                          <button class="blockButton" onclick="unblockUserButton()">Ya</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
       <!-- Sidebar -->
       <nav class="sidebar locked">
@@ -303,7 +378,47 @@ if(isset($_GET['user_name'])) {
             </a>
             </span>
         </nav>
+    <script>
+        // Fungsi untuk menampilkan modal konfirmasi
+        function showConfirmationBlockModal() {
+            // Periksa apakah variabel row sudah didefinisikan
+            if (typeof <?php echo json_encode($userData); ?> !== 'undefined') {
+                var modalContainerBlock = document.getElementById("modalContainerBlock");
+                modalContainerBlock.style.display = "flex"; // Tampilkan modal container
+            }
+        }
+
+        function showConfirmationUnBlockModal() {
+            // Periksa apakah variabel row sudah didefinisikan
+            if (typeof <?php echo json_encode($userData); ?> !== 'undefined') {
+                var modalContainerUnBlock = document.getElementById("modalContainerUnBlock");
+                modalContainerUnBlock.style.display = "flex"; // Tampilkan modal container
+            }
+        }
+
+        // Menutup modal saat diklik di luar modal
+        window.onclick = function(event) {
+            var modalContainerBlock = document.getElementById("modalContainerBlock");
+            if (event.target == modalContainerBlock) {
+                modalContainerBlock.style.display = "none";
+            }
+        }
+        // Menutup modal saat diklik di luar modal
+        window.onclick = function(event) {
+            var modalContainerUnBlock = document.getElementById("modalContainerUnBlock");
+            if (event.target == modalContainerUnBlock) {
+                modalContainerUnBlock.style.display = "none";
+            }
+        }
+        function blockUserButton(){
+            window.location.href = "crud/block_user.php?user_name=<?php echo $user_name; ?>";
+        }
+        function unblockUserButton(){
+            window.location.href = "crud/unblock_user.php?user_name=<?php echo $user_name; ?>";
+        }
+    </script>
     <script src="../script/script.js" defer></script>
     <script src="../script/copy-to-clipboard.js"></script>
+    <script src="../script/alert-time.js"></script>
   </body>
 </html>
