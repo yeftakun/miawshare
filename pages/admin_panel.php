@@ -308,7 +308,7 @@ if(isset($_SESSION['level_id'])) {
         <div class="modal-content">
             <span class="close">&times;</span>
             <p>Apakah Anda yakin ingin menghapus data ini?</p>
-            <button id="confirmDelete">Delete</button>
+            <button class="modalDelBtn" id="confirmDelete">Delete</button>
         </div>
     </div>
 
