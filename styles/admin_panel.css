@@ -192,3 +192,34 @@ body {
     color: transparent;
     border-right: 1px solid transparent;
 }
+
+/* Delete button on modal */
+.modalDelBtn {
+    background-color: #ff4d4d; /* Warna merah untuk tombol blokir */
+    color: white; /* Warna teks putih */
+    border: none; /* Tanpa border */
+    padding: 5px 10px; /* Padding pada tombol */
+    font-size: 14px; /* Ukuran font */
+    cursor: pointer; /* Pointer pada hover */
+    border-radius: 5px; /* Border radius untuk rounded corners */
+    transition: background-color 0.3s ease; /* Transisi halus untuk perubahan warna */
+    margin-top: 10px;
+}
+
+.modalDelBtn:hover {
+    background-color: #ff1a1a; /* Warna saat dihover */
+}
+
+.modalDelBtn:active {
+    background-color: #e60000; /* Warna saat di klik */
+}
+
+.modalDelBtn:focus {
+    outline: none; /* Menghilangkan outline default saat tombol di fokus */
+    box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.5); /* Shadow untuk fokus */
+}
+
+.modalDelBtn:disabled {
+    background-color: #ffcccc; /* Warna saat tombol dinonaktifkan */
+    cursor: not-allowed; /* Cursor tidak diijinkan */
+}
