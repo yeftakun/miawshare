@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2024 at 07:40 PM
+-- Generation Time: Jul 21, 2024 at 06:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,6 +39,33 @@ CREATE TABLE `level` (
 INSERT INTO `level` (`level_id`, `level_name`) VALUES
 (1, 'Admin'),
 (2, 'User');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `likes`
+--
+
+CREATE TABLE `likes` (
+  `liked_post_id` int(11) NOT NULL,
+  `liked_user_name` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
+(42, 'admin'),
+(46, 'admin'),
+(46, 'yefta'),
+(47, 'admin'),
+(47, 'yefta'),
+(48, 'admin'),
+(48, 'yefta'),
+(49, 'yefta'),
+(50, 'admin'),
+(50, 'yefta');
 
 -- --------------------------------------------------------
 
@@ -83,8 +110,7 @@ INSERT INTO `posts` (`post_id`, `user_id`, `post_img_path`, `post_title`, `post_
 (47, 123, 'Bocchi_the_rock_Hitori_Gotoh_the_c++_programming_language.png', 'Bocchi Holding CPP Book', '#book #meme #animegirl', '', '2024-07-19 17:32:31'),
 (48, 123, 'Kawaii Shiroko - pixiv.jpg', 'Shiroko', '#animegirl', '', '2024-07-19 17:33:00'),
 (49, 123, 'Bocchi Py.jpg', 'Python Is Bocchi Reference?!', '#anime #python #meme', '', '2024-07-19 17:33:34'),
-(50, 123, 'Polite cat.jpeg', 'Beluga Cat', '#beluga #cat', '', '2024-07-19 17:34:02'),
-(51, 123, 'bocchi-turu.jpg', 'Bocchi Turu', '#turu', '', '2024-07-19 17:35:28');
+(50, 123, 'Polite cat.jpeg', 'Beluga Cat', '#beluga #cat', '', '2024-07-19 17:34:02');
 
 -- --------------------------------------------------------
 
@@ -107,6 +133,20 @@ CREATE TABLE `post_likes` (
   `post_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `date_liked` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reports`
+--
+
+CREATE TABLE `reports` (
+  `report_id` int(11) NOT NULL,
+  `user_name_reported` varchar(30) DEFAULT NULL,
+  `post_id_reported` int(11) DEFAULT NULL,
+  `post_reported` varchar(100) DEFAULT NULL,
+  `user_name_reporter` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -146,7 +186,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`) VALUES
 (87, 'admin', 'Admin', 'default.png', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0'),
-(123, 'yefta', 'Yefta Asyel', 'default.png', 'hehehehe', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0');
+(123, 'yefta', 'Yefta Asyel', 'default.png', 'hehehehe', 2, '123', 'Suspended', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0');
 
 --
 -- Indexes for dumped tables
@@ -157,6 +197,13 @@ INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_
 --
 ALTER TABLE `level`
   ADD PRIMARY KEY (`level_id`);
+
+--
+-- Indexes for table `likes`
+--
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`liked_post_id`,`liked_user_name`),
+  ADD KEY `liked_user_name` (`liked_user_name`);
 
 --
 -- Indexes for table `otp`
@@ -185,6 +232,13 @@ ALTER TABLE `posts_tags`
 ALTER TABLE `post_likes`
   ADD KEY `idx_post_id` (`post_id`),
   ADD KEY `idx_user_id` (`user_id`);
+
+--
+-- Indexes for table `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`report_id`),
+  ADD KEY `fk_post_id` (`post_id_reported`);
 
 --
 -- Indexes for table `tags`
@@ -216,13 +270,19 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `otp`
 --
 ALTER TABLE `otp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
+--
+-- AUTO_INCREMENT for table `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -234,11 +294,18 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `likes`
+--
+ALTER TABLE `likes`
+  ADD CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`liked_post_id`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`liked_user_name`) REFERENCES `users` (`user_name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `otp`
@@ -266,6 +333,12 @@ ALTER TABLE `posts_tags`
 ALTER TABLE `post_likes`
   ADD CONSTRAINT `post_likes_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`),
   ADD CONSTRAINT `post_likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `reports`
+--
+ALTER TABLE `reports`
+  ADD CONSTRAINT `fk_post_id` FOREIGN KEY (`post_id_reported`) REFERENCES `posts` (`post_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `users`
