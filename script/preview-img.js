@@ -17,5 +17,10 @@ function previewImage() {
     }
 }
 
+// Event listener for image preview click
+document.querySelector('#image-preview').addEventListener('click', function() {
+    document.querySelector('input[type=file]').click();
+});
+
 // Event listener for file input change
 document.querySelector('input[type=file]').addEventListener('change', previewImage);

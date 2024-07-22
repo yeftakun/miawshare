@@ -3,6 +3,9 @@ session_start();
 include '../../koneksi.php';
 include '../../environment.php';
 
+$max_profile_img_size = MAX_PROFILE_IMAGE_SIZE;
+$profile_img_size_info = $max_profile_img_size / 1000;
+
 // Memeriksa apakah pengguna telah login
 if (!isset($_SESSION['user_id'])) {
     header("location:../../index.php?pesan=needlogin");
@@ -51,6 +54,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Menghasilkan nama file baru
             $newFileName = $username . '.' . $fileExt;
 
+            // Memeriksa apakah nama file sudah ada di database, jika sudah ada, tambahkan penomoran di belakang nama file. Contoh: user.jpg, user-1.jpg, user-2.jpg, dst.
+            $i = 1;
+            while (file_exists($uploadDir . $newFileName)) {
+                $newFileName = $username . '-' . $i . '.' . $fileExt;
+                $i++;
+            }
+
             // Memeriksa apakah file yang diupload adalah gambar
             $allowedExtensions = array('jpg', 'jpeg', 'png');
             if (in_array($fileExt, $allowedExtensions)) {
@@ -70,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 } else {
                     // Jika file yang diupload melebihi batas ukuran
-                    $errorMessage = "Ukuran file terlalu besar. Maksimal 500KB.";
+                    $errorMessage = "Ukuran file terlalu besar. Maksimal $profile_img_size_info KB.";
                 }
             } else {
                 // Jika file yang diupload bukan gambar
@@ -80,12 +90,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Query untuk memperbarui data pengguna
         // $queryUpdateUser = "UPDATE users SET name = '$name', user_name = '$username', user_bio = '$user_bio', user_profile_path = '$user_profile_path' WHERE user_id = " . $_SESSION['user_id'];
-        $queryUpdateUser = "UPDATE users SET name = '$name', user_name = '$username', user_bio = '$user_bio', user_profile_path = 'default.png' WHERE user_id = " . $_SESSION['user_id'];
+        $queryUpdateUser = "UPDATE users SET name = '$name', user_name = '$username', user_bio = '$user_bio', user_profile_path = '$userProfImg' WHERE user_id = " . $_SESSION['user_id'];
 
         // Eksekusi query
         $resultUpdateUser = mysqli_query($koneksi, $queryUpdateUser);
         // memperbaharui session user_name
         $_SESSION['user_name'] = $username;
+        // memperbaharui session user_profile_path
+        $_SESSION['user_profile_path'] = $userProfImg;
         // Memeriksa apakah perubahan berhasil disimpan
         if ($resultUpdateUser) {
             // Redirect ke halaman profile setelah perubahan disimpan
@@ -190,6 +202,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             transform: translate(-50%, -50%);
             color: #ccc;
         }
+        .ganti-pp {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        #image-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #image-preview:hover {
+            background-color: rgba(0, 0, 0, 0.3); /* Efek latar belakang redup */
+        }
+
+        .edit-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+            display: none;
+            pointer-events: none;
+        }
+
+        .image-container:hover .edit-icon {
+            display: block;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
     </style>
   </head>
   <body>
@@ -221,10 +278,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- <a href="../profile.php">Kembali</a> -->
         <form method="POST" enctype="multipart/form-data" class="upload_form">
             <h3>User Info</h3>
-            <!-- <label for="image" class="uploadimg">Ganti Foto</label>
-            <input type="file" id="image" name="image" accept="image/*" > -->
-            <!-- Image preview element -->
-            <!-- <img id="image-preview" src="../../storage/profile/'<?php echo $userData['user_profile_img']; ?>'" alt="pp"> -->
+            <div class="ganti-pp">
+                <!-- Elemen pratinjau gambar -->
+                <div class="image-container">
+                    <img id="image-preview" src="../../storage/profile/<?php echo $userProfImg; ?>" alt="pp">
+                    <i class="bx bxs-edit edit-icon"></i>
+                </div>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+
             <div class="form_group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" value="<?php echo $userData['name']; ?>" required>
