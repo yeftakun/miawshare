@@ -239,7 +239,7 @@ if (isset($_GET['post_id'])) {
             cursor: pointer;
             padding: 0;
             margin-right: 5px;
-            font-size: 24px;
+            font-size: 30px;
             display: flex;
             align-items: center;
         }

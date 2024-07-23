@@ -337,6 +337,9 @@ body {
 
 .user-info span {
   font-size: 18px;
+  /* text-decoration: none; */
+}
+.card-details a{
   text-decoration: none;
 }
 
@@ -351,7 +354,7 @@ body {
 .username {
   font-weight: bold;
   font-size: 14px;
-  text-decoration: none;
+  /* text-decoration: none; */
 }
 
 .content-title {
@@ -363,8 +366,9 @@ body {
 }
 
 .content-description {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
-  color: #666;
+  color: #515151;
   margin-bottom: 30px; 
 }
 
