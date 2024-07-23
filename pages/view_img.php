@@ -276,7 +276,8 @@ if (isset($_GET['post_id'])) {
 
         .menu-button {
             /* Style dasar tombol */
-            background: none;
+            /* background: none; */
+            background-color: #fff;
             border: none;
             cursor: pointer;
             padding: 10px;
