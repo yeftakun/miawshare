@@ -358,6 +358,15 @@ if (isset($_GET['post_id'])) {
     </style>
 </head>
 <body>
+    <?php
+        if(isset($_GET['pesan'])){
+            if ($_GET['pesan'] == "updatepostsuccess") {
+                echo "<div class='done'>Postingan berhasil diperbarui</div>";
+            } elseif ($_GET['pesan'] == "updatepostfailed") {
+                echo "<div class='alert'>Postingan gagal diperbarui</div>";
+            }
+        }
+    ?>
     <br><br><br><br>
 
     <div class="container">
@@ -398,6 +407,14 @@ if (isset($_GET['post_id'])) {
                     <button class="menu-button" id="menuBtn"><i class='bx bx-menu' ></i></button>
                     <div class="popup" id="popupMenu">
                         <ul>
+                            <?php
+                            if (isset($_SESSION['user_id'])){
+                                if ($row['user_id'] == $_SESSION['user_id']){
+                                    ?>
+                                    <li><a href="crud/edit_post.php?post_id=<?php echo $postId; ?>"><i class='bx bxs-edit'></i> Edit</a></li>
+                                <?php
+                                }
+                            }?>
                             <li><a href="../storage/posting/<?php echo $row['post_img_path']; ?>" download><i class='bx bxs-download'></i> Download gambar</i></a></li>
                             <li><a href="" id="copyButton"><i class='bx bx-copy' ></i> Copy Link</a></li>
                             <li><a href="" id="copyAddressButton"><i class='bx bx-copy' ></i> Copy Image Address</a></li>

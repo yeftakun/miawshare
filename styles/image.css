@@ -309,7 +309,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 850px;
-  min-height: 250px;
+  min-height: 300px;
   overflow: hidden;
   margin: 20px;
   display: flex;
