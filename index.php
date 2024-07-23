@@ -10,7 +10,7 @@
     <meta property="og:description" content="Daftar sekarang dan bagikan gambarmu!" />
     <meta property="og:image" content="https://miawshare.my.id/assets/logo/logo.png" />
     <link rel="stylesheet" href="styles/login.css">
-    <link rel="stylesheet" href="styles/alert.css">
+    <link rel="stylesheet" href="styles/alert2.css">
     <link rel="icon" type="image/png" href="assets/logo/logo.png">
     <!-- Boxicons CSS -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />

@@ -16,7 +16,7 @@
     text-align: center;
     border: 1px solid #b32929;
     position: fixed; /* atau absolute */
-    top: 75px; /* atur sesuai kebutuhan */
+    top: 50px; /* atur sesuai kebutuhan */
     right: 20px; /* atur sesuai kebutuhan */
     z-index: 1000; /* memastikan elemen ini berada di atas elemen lain */
     width: 300px; /* lebar tetap agar mudah diatur */
