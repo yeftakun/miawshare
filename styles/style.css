@@ -27,17 +27,26 @@ body {
   align-items: center; /* Tambahkan ini untuk meratakan konten secara vertikal */
 }
 
+.container-parent-again {
+  display: flex;
+  padding: 0px 10px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 /* Kontainer utama agar tidak tertutup oleh navbar */
 .container {
   padding-top: 60px; 
   width: 100%;
   margin: auto; /* Mengatur margin horizontal ke auto */
-  columns: 4;
-  column-gap: 15px;
+  columns: 5;
+  column-gap: 10px;
 }
 
 /*Buka modif */
 .container .box {
+  padding: 0px;
   position: relative; /* Menambahkan posisi relatif ke kotak untuk menampung elemen absolut */
 }
 
@@ -46,14 +55,14 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 5px);
   background: rgba(0, 0, 0, 0.5); /* Warna latar belakang overlay dengan transparansi */
   opacity: 0;
   transition: opacity 0.3s;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 10px 12px 10px;
   border-radius: 15px; /* Sesuaikan dengan border-radius gambar */
 }
 
@@ -275,22 +284,22 @@ body {
 {
   .container
   {
-      width: calc(100% - 40px);
-      columns: 3;
+      width: calc(100% - 0px);
+      columns: 4;
   }
 }
 @media (max-width: 768px)
 {
   .container
   {
-      columns: 2;
+      columns: 3;
   }
 }
 @media (max-width: 480px)
 {
   .container
   {
-      columns: 1;
+      columns: 2;
   }
 }
 

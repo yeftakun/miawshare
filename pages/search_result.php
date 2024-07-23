@@ -89,34 +89,35 @@ if(isset($_GET['search'])) {
             <input type="hidden" name="search" value="<?php echo $search; ?>">
         </form>
     </div>
-    <div class="container">
-
-    <!-- Menampilkan semua gambar di div.box -->
-    <?php
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            ?>
-                <div class="box">
-                    <a href="<?php echo 'view_img.php?post_id=' . $row['post_id']; ?>">
-                        <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <div class="title"><?php echo $row['post_title']; ?></div>
-                                <div class="user-info">
-                                    <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="Profile Picture">
-                                    <span><?php echo $row['user_name']; ?></span>
+    <div class="container-parent-again">
+        <div class="container">
+    
+        <!-- Menampilkan semua gambar di div.box -->
+        <?php
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                    <div class="box">
+                        <a href="<?php echo 'view_img.php?post_id=' . $row['post_id']; ?>">
+                            <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
+                            <div class="overlay">
+                                <div class="overlay-content">
+                                    <div class="title"><?php echo $row['post_title']; ?></div>
+                                    <div class="user-info">
+                                        <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="Profile Picture">
+                                        <span><?php echo $row['user_name']; ?></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
-            <?php
+                        </a>
+                    </div>
+                <?php
+            }
+        } else {
+            echo "Tidak ada data gambar.";
         }
-    } else {
-        echo "Tidak ada data gambar.";
-    }
-    ?>
-
+        ?>
+        </div>
     </div>
 
     <!-- Sidebar -->
