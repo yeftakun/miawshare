@@ -45,6 +45,7 @@ if(isset($_GET['search'])) {
         <link rel="stylesheet" type="text/css" href="../styles/style.css">
         <link rel="stylesheet" type="text/css" href="../styles/alert.css">
         <link rel="icon" type="image/png" href="../assets/logo/logo.png">
+        <!-- <link rel="stylesheet" href="../../styles/denied_page.css"> -->
         
         <!-- Boxicons CSS -->
         <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
@@ -70,6 +71,13 @@ if(isset($_GET['search'])) {
                 color: white;
                 padding-left: 10px;
             }
+            .tenor-gif {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                /* padding-left: */
+            }
 
         </style>
 </head>
@@ -89,12 +97,14 @@ if(isset($_GET['search'])) {
             <input type="hidden" name="search" value="<?php echo $search; ?>">
         </form>
     </div>
-    <div class="container-parent-again">
-        <div class="container">
     
-        <!-- Menampilkan semua gambar di div.box -->
-        <?php
+    <!-- Menampilkan semua gambar di div.box -->
+    <?php
         if (mysqli_num_rows($result) > 0) {
+            ?>
+            <div class="container-parent-again">
+            <div class="container">
+            <?php
             while ($row = mysqli_fetch_assoc($result)) {
                 ?>
                     <div class="box">
@@ -111,14 +121,23 @@ if(isset($_GET['search'])) {
                             </div>
                         </a>
                     </div>
-                <?php
+                    <?php
             }
+            ?>
+            </div>
+            </div>
+            <?php
         } else {
-            echo "Tidak ada data gambar.";
+            // Jika hasil pencarian tidak ditemukan, maka align text ke tengah atas
+            ?>
+            <div class="tenor-gif" width="100%">
+                <img src="../assets/gif/confused.gif" alt="gif no">
+                <h2>Gambar tidak ditemukan</h2>
+            </div>
+            <?php
+            // echo "Tidak ada data gambar.";
         }
         ?>
-        </div>
-    </div>
 
     <!-- Sidebar -->
     <nav class="sidebar locked">
