@@ -10,6 +10,23 @@ $max_image_size = MAX_IMAGE_SIZE;
 $size_in_kb = $max_image_size / 1000;
 $errorMsg = '';
 
+// Fungsi untuk memproses teks dan mengonversi URL menjadi tautan HTML
+function convertUrlsToLinks($text) {
+    // Regex untuk menemukan URL
+    $pattern = '/(https?:\/\/[^\s]+)/';
+    // Gantikan URL dengan tag <a>
+    $replacement = '<a href="$1" target="_blank">$1</a>';
+    // Proses teks dan kembalikan hasilnya
+    return preg_replace($pattern, $replacement, $text);
+}
+function filterInput($input) {
+    // Daftar tag HTML yang diizinkan (misalnya hanya <a> dan <b>)
+    $allowedTags = '<a><b><i><strong><em><p><ul><li><ol><br><hr>';
+
+    // Hapus semua tag HTML yang tidak diizinkan
+    return strip_tags($input, $allowedTags);
+}
+
 // Cek kembali status user dengan mengupdate session dari database
 if(isset($_SESSION['user_id'])){
     $user_id = $_SESSION['user_id'];
@@ -31,6 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $post_title = $_POST['post_title'];
     $post_description = $_POST['post_description'];
     $post_link = $_POST['post_link'];
+
+    // Filter deskripsi untuk membatasi tag HTML
+    $post_description = filterInput($post_description);
+    // Proses deskripsi untuk mengonversi URL menjadi tautan
+    $post_description = convertUrlsToLinks($post_description);
 
     // ambil data dari session
     $user_id = $_SESSION['user_id'];
