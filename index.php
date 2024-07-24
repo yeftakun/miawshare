@@ -14,6 +14,11 @@
     <link rel="icon" type="image/png" href="assets/logo/logo.png">
     <!-- Boxicons CSS -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+        body a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -60,7 +65,7 @@
             </div>
             <button type="submit">Login</button>
             <!-- Tombol Daftar -->
-            <br><p id="mendaftar">Tidak punya akun? <a id="regist" href="daftar.php">Daftar</a></p>
+            <br><p id="mendaftar">Tidak punya akun? <a id="regist" href="daftar.php">Daftar</a>. Atau masuk sebagai <a id="regist" href="pages/beranda.php">tamu</a></p>
             <!-- Tombol Verifikasi -->
             <a href="verif-otp.php" id="verify">Verifikasi</a>
         </form>
