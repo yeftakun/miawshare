@@ -232,6 +232,17 @@
   color: #555;
 }
 
+.statistic-user {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-around; /* Arrange items side by side */
+}
+
+.statistic-user {
+  margin: 10px 0;
+}
+
 .pembuatan {
   text-align: center;
   color: #000;

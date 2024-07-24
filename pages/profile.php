@@ -42,15 +42,33 @@ if(isset($_GET['user_name'])) {
                             SELECT COUNT(l.liked_post_id) AS total_likes FROM posts p
                             LEFT JOIN likes l ON p.post_id = l.liked_post_id
                             JOIN users u ON p.user_id = u.user_id
-                            WHERE u.user_name = 'yefta'
+                            WHERE u.user_name = '$user_name'
                             GROUP BY p.post_id
                         ) AS likes_summary";
     $getTotalLikeResult = mysqli_query($koneksi, $getTotalLikeQuery);
+    $totalLike = mysqli_fetch_assoc($getTotalLikeResult);
     // pastikan ada hasil dari query total like
-    if(mysqli_num_rows($getTotalLikeResult) > 0) {
-        $totalLike = mysqli_fetch_assoc($getTotalLikeResult);
-    } else {
-        $totalLike = 0;
+    // if(mysqli_num_rows($getTotalLikeResult) > 0) {
+    //     $totalLikes = $totalLike['total_likes_sum'];
+    // } else {
+    //     $totalLikes = "0";
+    // }
+    if($totalLike['total_likes_sum'] == null){
+        $totalLikes = 0;
+    }else{
+        $totalLikes = $totalLike['total_likes_sum'];
+    }
+
+    // Query untuk total post yang diupload pengguna
+    $getTotalPostQuery = "SELECT COUNT(post_id) AS total_post FROM posts WHERE user_id = '$user_id'";
+    $getTotalPostResult = mysqli_query($koneksi, $getTotalPostQuery);
+    $totalPost = mysqli_fetch_assoc($getTotalPostResult);
+    
+    // pastikan ada hasil dari query total post
+    if($totalPost['total_post'] == null){
+        $totalPosting = 0;
+    }else{
+        $totalPosting = $totalPost['total_post'];
     }
 
 } else {
@@ -126,7 +144,18 @@ if(isset($_GET['user_name'])) {
                     <div class="info">
                         <p>Pengguna MiawShare</p>
                     </div>
-                    <p>Likes: <?php echo $totalLike['total_likes_sum']; ?></p>
+                    <!-- <div class="statistic-user">
+                        <nav>
+                            <ul>
+                                <li><p><b>Post: <?php echo $totalPosting; ?></b></p></li>
+                                <li><p><b>Likes: <?php echo $totalLikes; ?></p></b></li>
+                            </ul>
+                        </nav>
+                    </div> -->
+                    <div class="statistic-user">
+                        <p><b>Post: <?php echo $totalPosting; ?></b></p>
+                        <p><b>Likes: <?php echo $totalLikes; ?></p></b>
+                    </div>
                     <?php
                     // Jika yang melihat admin, tampilkan tombol blokir
                     if ($status == 'Suspended'){
