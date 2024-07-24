@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2024 at 06:07 PM
+-- Generation Time: Jul 24, 2024 at 03:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -57,6 +57,8 @@ CREATE TABLE `likes` (
 
 INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
 (42, 'admin'),
+(42, 'yefta'),
+(44, 'yefta'),
 (46, 'admin'),
 (46, 'yefta'),
 (47, 'admin'),
@@ -65,7 +67,10 @@ INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
 (48, 'yefta'),
 (49, 'yefta'),
 (50, 'admin'),
-(50, 'yefta');
+(50, 'yefta'),
+(54, 'yefta'),
+(56, 'yefta'),
+(65, 'yefta');
 
 -- --------------------------------------------------------
 
@@ -107,10 +112,14 @@ INSERT INTO `posts` (`post_id`, `user_id`, `post_img_path`, `post_title`, `post_
 (43, 123, 'Rocking 4K Anime Crew by BinsentoOmosura (1).jpg', 'Kessoku Band Wallpaper', '#desktop #wallpaper', '', '2024-07-19 17:29:58'),
 (44, 123, 'Astolfo_reading_ABAP_objects.png', 'Astolfo Reading', '#book #trap', '', '2024-07-19 17:30:28'),
 (46, 123, 'sunaookami-shiroko-blue-archive-v0-mnsvdd9qraw91.png', 'Shiroko Winter', 'Pov me, wkwk #shiroko #winter', '', '2024-07-19 17:31:40'),
-(47, 123, 'Bocchi_the_rock_Hitori_Gotoh_the_c++_programming_language.png', 'Bocchi Holding CPP Book', '#book #meme #animegirl', '', '2024-07-19 17:32:31'),
+(47, 123, 'Bocchi_the_rock_Hitori_Gotoh_the_c++_programming_language.png', 'Bocchi Holding CPP Book', '', '', '2024-07-19 17:32:31'),
 (48, 123, 'Kawaii Shiroko - pixiv.jpg', 'Shiroko', '#animegirl', '', '2024-07-19 17:33:00'),
 (49, 123, 'Bocchi Py.jpg', 'Python Is Bocchi Reference?!', '#anime #python #meme', '', '2024-07-19 17:33:34'),
-(50, 123, 'Polite cat.jpeg', 'Beluga Cat', '#beluga #cat', '', '2024-07-19 17:34:02');
+(50, 123, 'Polite cat.jpeg', 'Beluga Cat', '#beluga #cat', '', '2024-07-19 17:34:02'),
+(54, 123, 'FB_IMG_1718369577280.jpg', 'Miaw Cosplay', '', '', '2024-07-21 16:16:13'),
+(55, 123, 'download.jpeg', 'Java', '', '', '2024-07-21 16:16:39'),
+(56, 123, 'FB_IMG_1721570386958.jpg', 'Jawir?!', '', '', '2024-07-21 16:17:08'),
+(65, 127, 'migu gaming.jpeg', 'Migu Gaming', '#miku #hatsunemiku #gamer #animegirl', '', '2024-07-24 00:13:51');
 
 -- --------------------------------------------------------
 
@@ -149,6 +158,13 @@ CREATE TABLE `reports` (
   `user_name_reporter` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `reports`
+--
+
+INSERT INTO `reports` (`report_id`, `user_name_reported`, `post_id_reported`, `post_reported`, `user_name_reporter`) VALUES
+(18, 'yefta', 49, 'Python Is Bocchi Reference?!', 'yefta');
+
 -- --------------------------------------------------------
 
 --
@@ -185,8 +201,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`) VALUES
-(87, 'admin', 'Admin', 'default.png', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0'),
-(123, 'yefta', 'Yefta Asyel', 'default.png', 'hehehehe', 2, '123', 'Suspended', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0');
+(87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0'),
+(123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0'),
+(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '1627790263');
 
 --
 -- Indexes for dumped tables
@@ -270,19 +287,19 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `otp`
 --
 ALTER TABLE `otp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -294,7 +311,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
 
 --
 -- Constraints for dumped tables
