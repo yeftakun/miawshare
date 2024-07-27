@@ -313,9 +313,9 @@ if(isset($_GET['user_name'])) {
                     if($_SESSION['level_id'] == 2){
                         ?>
                         <li class="item">
-                            <a href="crud/download.php" class="link flex">
-                            <i class="bx bx-download"></i>
-                            <span>Download All</span>
+                            <a href="another.php" class="link flex">
+                            <i class="bx bxs-cog"></i>
+                            <span>Lainnya</span>
                             </a>
                         </li>
                         <?php
