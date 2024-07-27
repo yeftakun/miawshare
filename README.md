@@ -25,6 +25,9 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - Pencarian postingan lewat judul, deskripsi dan pengupload
 - Edit informasi pengguna dan hapus akun
 - Regenerate OTP, hapus postingan, tambahkan/edit/hapus pengguna (Admin)
+- Backup gambar dan data
+- Fitur pelaporan gambar
+- Pembatasan pengguna oleh admin
 
 ## Credit📜
 
