@@ -58,7 +58,7 @@ if (false) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Download Files</title>
+    <title>MiawShare - Backup Files</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,7 +91,7 @@ if (false) {
 </head>
 <body>
     <div class="container">
-        <h1>Download Files</h1>
+        <h1>Backup (Download Files)</h1>
         <p>Total ukuran file: <?php echo formatSizeUnits($totalSize); ?></p>
         <button class="button" onclick="cancelDownload()">Gak Jadi</button>
         <button class="button" onclick="startDownload()">Unduh</button>
@@ -123,7 +123,7 @@ if (false) {
         }
         function cancelDownload() {
             // Redirect user to ../profile directory
-            window.location.href = '../profile.php';
+            window.location.href = '../another.php';
         }
     </script>
 </body>
