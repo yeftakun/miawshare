@@ -149,9 +149,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             border-radius: 10px;
             text-align: center;
             padding: 20px;
-            margin-top: 20px;
+            margin-top: 0px;
             position: relative;
             width: 100%;
+            min-height: 100px;
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
@@ -168,6 +169,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             transform: translate(-50%, -50%);
             color: #ccc;
         }
+        .preview-container:hover {
+            background-color: #e0f0ff;
+        }
+        .dropzone {
+            border: none;
+            border-radius: 10px;
+            text-align: center;
+            padding: 0px;
+            min-height: 120px;
+            margin-top: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropzone p {
+            margin: 0;
+            color: #ccc;
+        }
+
     </style>
   </head>
   <body>
@@ -186,33 +206,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             <!-- Main Content -->
             <main class="main_content">
               <!-- Upload Form -->
-              <div class="upload_container">
+                <div class="upload_container">
                 <form method="post" enctype="multipart/form-data" class="upload_form">
-                  <div class="form_group">
-                    <label for="post_title">Title</label>
+                    <div class="form_group">
+                    <label for="post_title">Judul</label>
                     <input type="text" name="post_title" id="post_title">
-                  </div>
-                  <div class="form_group">
-                    <label for="post_description">Description</label>
+                    </div>
+                    <div class="form_group">
+                    <label for="post_description">Caption</label>
                     <textarea name="post_description" id="post_description" rows="4" placeholder="Deskripsi gambar #tag1 #tag2 #tag3"></textarea>
-                  </div>
-                  <div class="form_group">
+                    </div>
+                    <!-- <div class="form_group">
                     <label for="image" class="upload_label">
-                      <i class="bx bx-upload"></i>
-                      <span>Select file to upload</span>
+                        <i class="bx bx-upload"></i>
+                        <span>Select file to upload</span>
                     </label>
                     <input type="file" name="image" id="image" style="display: none;" required>
-                  </div>
-                  <div class="preview-container">
+                    </div> -->
+                    <div class="dropzone" id="dropzone">
+                    <!-- <p>Drag & Drop your image here or click to select</p> -->
+                    <input type="file" id="image-drop" name="image" style="display: none;" required>
+                    <div class="preview-container">
                     <img id="image-preview" src="" alt="Image Preview">
-                    <span class="preview-text">Masukan gambar</span>
-                  </div>
-                  <button type="submit" name="submit" class="upload_btn flex">
+                    <span class="preview-text">Drag & drop atau jelajahi</span>
+                    </div>
+                    </div>
+                    <button type="submit" name="submit" class="upload_btn flex">
                     <i class="bx bx-cloud-upload"></i>
                     <span>Upload File</span>
-                  </button>
+                    </button>
                 </form>
-              </div>
+                </div>
             </main>
             <?php
         }elseif($_SESSION['level_id'] == 1){
@@ -379,26 +403,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             </span> 
         </nav>
         <script>
-        // Function to preview the selected image
-        function previewImage() {
-            var preview = document.querySelector('#image-preview');
-            var file = document.querySelector('input[type=file]').files[0];
-            var reader = new FileReader();
-
-            reader.onloadend = function () {
-                preview.src = reader.result;
-                preview.style.display = 'block'; // Show the preview image
-                document.querySelector('.preview-text').style.display = 'none'; // Hide the preview text
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to handle file drop
+            function handleDrop(event) {
+                event.preventDefault();
+                const file = event.dataTransfer.files[0];
+                if (file) {
+                    document.querySelector('#image-drop').files = event.dataTransfer.files;
+                    previewImage();
+                }
             }
 
-            if (file) {
-                reader.readAsDataURL(file); // Read the file as a data URL
-            } else {
-                preview.src = ''; // Clear the preview if no file is selected
-                preview.style.display = 'none'; // Hide the preview image
-                document.querySelector('.preview-text').style.display = 'block'; // Show the preview text
+            // Function to handle file select
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    previewImage();
+                }
             }
-        }
+
+            // Function to preview the selected image
+            function previewImage() {
+                var preview = document.querySelector('#image-preview');
+                var file = document.querySelector('#image-drop').files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.src = reader.result;
+                    preview.style.display = 'block'; // Show the preview image
+                    document.querySelector('.preview-text').style.display = 'none'; // Hide the preview text
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file); // Read the file as a data URL
+                } else {
+                    preview.src = ''; // Clear the preview if no file is selected
+                    preview.style.display = 'none'; // Hide the preview image
+                    document.querySelector('.preview-text').style.display = 'block'; // Show the preview text
+                }
+            }
+
+            // Event listeners for dropzone
+            document.querySelector('#dropzone').addEventListener('dragover', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            });
+
+            document.querySelector('#dropzone').addEventListener('drop', handleDrop);
+            document.querySelector('#dropzone').addEventListener('click', function() {
+                document.querySelector('#image-drop').click();
+            });
+
+            // Event listener for file input change
+            document.querySelector('#image-drop').addEventListener('change', handleFileSelect);
+        });
+
 
         // Event listener for file input change
         document.querySelector('input[type=file]').addEventListener('change', previewImage);
