@@ -172,33 +172,35 @@ if (isset($_GET['post_id'])) {
     <script>
         // Fungsi untuk menangani pengiriman laporan
         function reportImage() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            var user_name_reported = '<?php echo $row['user_name']; ?>';
-            var post_id_reported = '<?php echo $row['post_id']; ?>';
-            var post_reported = '<?php echo $row['post_title']; ?>';
-            var user_name_reporter = '<?php echo $_SESSION['user_name']; ?>';
-
-            xhr.send('action=report&user_name_reported=' + encodeURIComponent(user_name_reported) +
-                      '&post_id_reported=' + encodeURIComponent(post_id_reported) +
-                      '&post_reported=' + encodeURIComponent(post_reported) +
-                      '&user_name_reporter=' + encodeURIComponent(user_name_reporter));
-
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    if (xhr.responseText === 'report_successful') {
-                        alert('Laporan berhasil dikirim');
-                    } else if (xhr.responseText === 'already_reported') {
-                        alert('Anda sudah membuat laporan untuk data postingan ini.');
+            if (confirm('Apakah Anda yakin ingin melaporkan gambar ini? Pengguna diharap untuk tidak melaporkan gambar yang tidak melanggar ketentuan layanan.')) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+                var user_name_reported = '<?php echo $row['user_name']; ?>';
+                var post_id_reported = '<?php echo $row['post_id']; ?>';
+                var post_reported = '<?php echo $row['post_title']; ?>';
+                var user_name_reporter = '<?php echo $_SESSION['user_name']; ?>';
+    
+                xhr.send('action=report&user_name_reported=' + encodeURIComponent(user_name_reported) +
+                          '&post_id_reported=' + encodeURIComponent(post_id_reported) +
+                          '&post_reported=' + encodeURIComponent(post_reported) +
+                          '&user_name_reporter=' + encodeURIComponent(user_name_reporter));
+    
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        if (xhr.responseText === 'report_successful') {
+                            alert('Laporan berhasil dikirim');
+                        } else if (xhr.responseText === 'already_reported') {
+                            alert('Anda sudah membuat laporan untuk data postingan ini.');
+                        } else {
+                            alert('Terjadi kesalahan. Coba lagi nanti.');
+                        }
                     } else {
                         alert('Terjadi kesalahan. Coba lagi nanti.');
                     }
-                } else {
-                    alert('Terjadi kesalahan. Coba lagi nanti.');
-                }
-            };
+                };
+            }
         }
 
         // Fungsi untuk menangani aksi like dan dislike
