@@ -14,7 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ambil data dari form
     $userName = $_POST['user_name'];
     $name = $_POST['name'];
-    $bio = $_POST['bio'];
+    // $bio = $_POST['bio'];
+    $bio = "Update bio anda edit profil!";
     $password = $_POST['password'];
     $teleChatID = $_POST['tele_chat_id'];
 
@@ -185,16 +186,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="bio">Bio</label>
-                <input type="text" id="bio" name="bio" value="-" required>
-            </div>
-            <div class="form-group">
-                <label for="tele_chat_id">ChatID Telegram:</label>
-                <input type="number" id="tele_chat_id" name="tele_chat_id" required>
-            </div>
-            <p class="inilink">Dapatkan <a href="https://t.me/chatIDrobot" target="_blank">ChatID</a></p>
-            <p class="inilink">Tulis apapun di <a href="https://t.me/spamtestingbot" target="_blank">Bot Notifikasi</a></p>
-            <div class="form-group">
                 <label for="username">Username</label>
                 <!-- <input type="text" id="username" name="username" required> -->
                 <input type="text" id="user_name" name="user_name" required>
@@ -203,6 +194,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 <button type="button" id="togglePassword" class="toggle-password">Show</button>
+            </div>
+            <p class="inilink">Dapatkan <a href="https://t.me/chatIDrobot" target="_blank">ChatID</a></p>
+            <p class="inilink">Tulis apapun di <a href="https://t.me/spamtestingbot" target="_blank">Bot Notifikasi</a></p>
+            <div class="form-group">
+                <label for="tele_chat_id">ChatID Telegram:</label>
+                <input type="number" id="tele_chat_id" name="tele_chat_id" required>
             </div>
             <p class="terms">Dengan membuat akun, anda setuju dengan<a href="pages/terms.php"> ketentuan penggunaan kami.</a></p>
             <button type="submit">Buat</button>
