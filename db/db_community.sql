@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2024 at 03:04 AM
+-- Generation Time: Jul 27, 2024 at 03:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,6 +56,7 @@ CREATE TABLE `likes` (
 --
 
 INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
+(41, 'yefta'),
 (42, 'admin'),
 (42, 'yefta'),
 (44, 'yefta'),
@@ -68,9 +69,9 @@ INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
 (49, 'yefta'),
 (50, 'admin'),
 (50, 'yefta'),
+(54, 'admin'),
 (54, 'yefta'),
-(56, 'yefta'),
-(65, 'yefta');
+(56, 'yefta');
 
 -- --------------------------------------------------------
 
@@ -119,7 +120,9 @@ INSERT INTO `posts` (`post_id`, `user_id`, `post_img_path`, `post_title`, `post_
 (54, 123, 'FB_IMG_1718369577280.jpg', 'Miaw Cosplay', '', '', '2024-07-21 16:16:13'),
 (55, 123, 'download.jpeg', 'Java', '', '', '2024-07-21 16:16:39'),
 (56, 123, 'FB_IMG_1721570386958.jpg', 'Jawir?!', '', '', '2024-07-21 16:17:08'),
-(65, 127, 'migu gaming.jpeg', 'Migu Gaming', '#miku #hatsunemiku #gamer #animegirl', '', '2024-07-24 00:13:51');
+(79, 127, 'migu gaming.jpeg', 'Migu Gaming', '#miku #gaming', '', '2024-07-27 11:18:09'),
+(82, 127, 'Keqing.600.3538467.jpg', 'Keqing', '#game #animegirl', '', '2024-07-27 12:23:47'),
+(85, 127, 'animegirl-purple-hair-yellow-eyes-catgirl-city-279171890.jpg', 'Cat Girl', '#animegirl', '', '2024-07-27 12:27:30');
 
 -- --------------------------------------------------------
 
@@ -163,7 +166,7 @@ CREATE TABLE `reports` (
 --
 
 INSERT INTO `reports` (`report_id`, `user_name_reported`, `post_id_reported`, `post_reported`, `user_name_reporter`) VALUES
-(18, 'yefta', 49, 'Python Is Bocchi Reference?!', 'yefta');
+(20, 'yefta', 54, 'Miaw Cosplay', 'admin');
 
 -- --------------------------------------------------------
 
@@ -201,9 +204,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`) VALUES
-(87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0'),
+(87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '1627790263'),
 (123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0'),
-(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '1627790263');
+(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '0');
 
 --
 -- Indexes for dumped tables
@@ -287,19 +290,19 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `otp`
 --
 ALTER TABLE `otp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -311,7 +314,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- Constraints for dumped tables
