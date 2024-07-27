@@ -1,6 +1,17 @@
 <?php
 // Include koneksi ke database
+session_start();
 include '../../koneksi.php';
+
+// Yang akses harus login dan berupa admin
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php?pesan=needlogin");
+    exit();
+    if ($_SESSION['level'] != '1') {
+        header("Location: ../error/deniedpage.php");
+        exit();
+    }
+}
 
 // Periksa apakah terdapat parameter page dan id yang diterima melalui URL
 if(isset($_GET['page']) && isset($_GET['id'])) {
