@@ -204,7 +204,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`) VALUES
-(87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '1627790263'),
+(87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0'),
 (123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0'),
 (127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '0');
 
