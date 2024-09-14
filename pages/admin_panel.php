@@ -281,17 +281,24 @@ if(isset($_SESSION['level_id'])) {
                 <?php
                 if (mysqli_num_rows($resultUsers) > 0) {
                     echo "<tr class='GridViewScrollHeader'>";
-                    echo "<th>ID</th><th>User Name</th><th>Name</th><th>User Profile Path</th><th>User Bio</th><th>Level ID</th><th>Password</th><th>Status</th><th>Tele Chat ID</th><th>Control</th></tr>";
+                    echo "<th>ID</th><th>User Name</th><th>Name</th><th>User Profile Path</th><th>User Bio</th><th>Level ID</th><th>Password</th><th>Status</th><th>To Suspend</th><th>Tele Chat ID</th><th>Control</th></tr>";
                     while($rowUser = mysqli_fetch_assoc($resultUsers)) {
                         echo "<tr class='GridViewScrollItem'>";
                         echo "<td>".$rowUser['user_id']."</td>";
-                        echo "<td>".$rowUser['user_name']."</td>";
+                        // echo "<td><a href='profile?username=.$row['user_name'].'>".$rowUser['user_name']."</a></td>";
+                        ?>
+                        <td>
+                            <a href="<?php echo "profile.php?user_name=", $rowUser['user_name']; ?>">
+                                <?php echo $rowUser['user_name']; ?>
+                            </a>
+                        <?php
                         echo "<td>".$rowUser['name']."</td>";
                         echo "<td>".$rowUser['user_profile_path']."</td>";
                         echo "<td>".$rowUser['user_bio']."</td>";
                         echo "<td>".$rowUser['level_id']."</td>";
                         echo "<td>".$rowUser['password']."</td>";
                         echo "<td>".$rowUser['status']."</td>";
+                        echo "<td>".$rowUser['to_suspend']."</td>";
                         echo "<td>".$rowUser['tele_chat_id']."</td>";
                         echo "<td><a href='crud/edit_data.php?page=users&id=".$rowUser['user_id']."' class='btn'>Edit</a> | <a class='deleteBtn' data-id='".$rowUser['user_id']."' data-page='users'>Delete</a></td>";
                     }
