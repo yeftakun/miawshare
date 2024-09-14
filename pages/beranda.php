@@ -6,7 +6,7 @@ include '../environment.php';
 $limit_beranda = LIMIT_BERANDA;
 
 // Query untuk mengambil data gambar dan informasi pengguna
-$query = "SELECT users.user_name, users.name, users.user_profile_path, posts.post_id, posts.post_img_path, posts.post_title, posts.create_in 
+$query = "SELECT users.user_name, users.name, users.user_profile_path, posts.post_id, posts.post_img_path, posts.post_title, posts.classify, posts.create_in 
           FROM posts 
           JOIN users ON posts.user_id = users.user_id 
           ORDER BY posts.create_in DESC 
@@ -38,6 +38,16 @@ $result = mysqli_query($koneksi, $query);
         <br>
         <br>
         <br>
+        <!-- Mendapatkan pesan -->
+         <?php
+        if(isset($_GET['pesan'])){
+            if($_GET['pesan'] == 'uploadsuccess'){
+                echo "<div class='done alert-danger'>Berhasil mengupload postingan</div>";
+            }elseif($_GET['pesan'] == 'nsfw'){
+                echo "<div class='alert alert-danger'>Postingan anda terdeteksi NSFW - Postingan akan disembunyikan.</div>";
+            }
+        }
+        ?>
         <div class="container-parent-again">
             <div class="container">
     
@@ -45,6 +55,10 @@ $result = mysqli_query($koneksi, $query);
             <?php
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
+                    // Jika gambar terdeteksi NSFW, maka gambar tidak akan ditampilkan kecuali untuk admin
+                    if (($row['classify'] == 'nsfw') && ($_SESSION['level_id'] != 1)) {
+                        continue;
+                    }else{
                     ?>
                         <div class="box">
                             <a href="<?php echo 'view_img.php?post_id=' . $row['post_id']; ?>">
@@ -61,6 +75,7 @@ $result = mysqli_query($koneksi, $query);
                             </a>
                         </div>
                     <?php
+                    }
                 }
             } else {
                 echo "Tidak ada data gambar.";
@@ -232,4 +247,5 @@ $result = mysqli_query($koneksi, $query);
             </span> 
         </nav>
         </body>
+        <script src="../script/alert-time.js"></script>
   </html>

@@ -9,6 +9,9 @@ $token = TOKEN_BOT;
 $max_image_size = MAX_IMAGE_SIZE;
 $size_in_kb = $max_image_size / 1000;
 $errorMsg = '';
+// dapatkan nama host nsfw api (host:port)
+$hostAPI = 'http://localhost:5000';
+$hostMain = 'http://localhost/miawshare';
 
 // Fungsi untuk memproses teks dan mengonversi URL menjadi tautan HTML
 function convertUrlsToLinks($text) {
@@ -47,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     // init dan ambil data dari form
     $post_title = $_POST['post_title'];
     $post_description = $_POST['post_description'];
-    $post_link = $_POST['post_link'];
+    // $post_link = $_POST['post_link'];
 
     // Filter deskripsi untuk membatasi tag HTML
     $post_description = filterInput($post_description);
@@ -105,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         
         
         //  Proses input data ke database
-        $insertQuery = "INSERT INTO posts (user_id, post_img_path, post_title, post_description, post_link) VALUES ('$user_id', '$filePath', '$post_title', '$post_description', '$post_link')";
+        $insertQuery = "INSERT INTO posts (user_id, post_img_path, post_title, post_description) VALUES ('$user_id', '$filePath', '$post_title', '$post_description')";
         // eksekusi query
         mysqli_query($koneksi, $insertQuery);
 
@@ -120,7 +123,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         // file_get_contents($telegramAPI);
         
         // redirect ke beranda jika PostIDnya ditemukan
-        header("location:beranda.php?pesan=uploadsuccess");
+        // header("location:beranda.php?pesan=uploadsuccess");
+        
+        // Cek NSFW API
+        $url = $hostAPI . '/classify';
+        $data = array('image_url' => $hostMain . '/storage/posting/' . $filePath);
+
+        $options = array(
+            'http' => array(
+            'header'  => "Content-Type: application/json\r\n",
+            'method'  => 'POST',
+            'content' => json_encode($data),
+            ),
+        );
+
+        $context  = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
+
+        if ($response === false) {
+            // update classify post menjadi pending
+            $updateQuery = "UPDATE posts SET classify = 'pending' WHERE post_img_path = '$filePath'";
+            mysqli_query($koneksi, $updateQuery);
+        }else{
+            $responseData = json_decode($response, true);
+            if($responseData['predicted_class'] == 'nsfw'){
+                $getCountSuspend = "SELECT to_suspend FROM users WHERE user_name = '$_SESSION[user_name]'";
+                $result = mysqli_query($koneksi, $getCountSuspend);
+                $user = mysqli_fetch_assoc($result);
+                $to_suspend = $user['to_suspend'];
+                // decrement to_suspend
+                $to_suspend--;
+                $decrementCount = "UPDATE users SET to_suspend = $to_suspend WHERE user_name = '$_SESSION[user_name]'";
+                mysqli_query($koneksi, $decrementCount);
+
+                // update classify post menjadi nsfw
+                $updateQuery = "UPDATE posts SET classify = 'nsfw' WHERE post_img_path = '$filePath'";
+                mysqli_query($koneksi, $updateQuery);
+
+                // ketika to_suspend habis, status user menjadi Suspended
+                if($to_suspend <= 0){
+                    $updateStatus = "UPDATE users SET status = 'Suspended' WHERE user_name = '$_SESSION[user_name]'";
+                    mysqli_query($koneksi, $updateStatus);
+                    header("location:profile.php?user_name=" . $_SESSION['user_name'] . "&pesan=awokawok-ndableg");
+                    exit();
+                }else{
+                    // redirect ke beranda
+                    header("location:beranda.php?pesan=nsfw");
+                }
+
+            }else{
+                // update classify post menjadi sfw
+                $updateQuery = "UPDATE posts SET classify = 'sfw' WHERE post_img_path = '$filePath'";
+                mysqli_query($koneksi, $updateQuery);
+                // redirect ke beranda
+                header("location:beranda.php?pesan=uploadsuccess");
+            }
+        }
+
         
     }
     
@@ -135,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Centered Upload Form</title>
+    <title>Upload Image</title>
     <link rel="stylesheet" href="../styles/style.css" />
     <link rel="stylesheet" href="../styles/alert.css" />
     <link rel="icon" type="image/png" href="../assets/logo/logo.png">
@@ -187,6 +246,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             margin: 0;
             color: #ccc;
         }
+        /* Modal */
+        /* Modal styling */
+        .modal {
+        display: none; 
+        position: fixed; 
+        z-index: 999; 
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+        }
+
+        .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+        .loader {
+        border: 8px solid #f3f3f3; /* Light gray */
+        border-top: 8px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
 
     </style>
   </head>
@@ -203,6 +301,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             }
             // halaman posting khusus user
             ?>
+            <!-- Modal -->
+            <div id="loadingModal" class="modal">
+                <div class="modal-content">
+                    <div class="loader"></div>
+                </div>
+            </div>
             <!-- Main Content -->
             <main class="main_content">
               <!-- Upload Form -->
@@ -464,5 +568,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         </script>
         <script src="../script/preview-img.js"></script>
         <script src="../script/alert-time.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const modal = document.getElementById('loadingModal');
+                
+                // Tampilkan modal loading saat form di-submit
+                document.querySelector('.upload_form').addEventListener('submit', function () {
+                    modal.style.display = 'block';
+                });
+
+                // Setelah selesai (misal dengan ajax atau form submit)
+                function hideLoadingModal() {
+                    modal.style.display = 'none';
+                }
+
+                // Optional: Anda bisa panggil hideLoadingModal() setelah selesai proses (misalnya setelah API selesai direspons).
+            });
+        </script>
     </body>
 </html>

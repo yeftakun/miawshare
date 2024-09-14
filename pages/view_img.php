@@ -3,6 +3,25 @@ session_start();
 $lama = '';
 include '../koneksi.php';
 
+// Jika postingan adalah NSFW
+if (isset($_GET['post_id'])){
+    $postId = mysqli_real_escape_string($koneksi, $_GET['post_id']);
+    $query = "SELECT classify FROM posts WHERE post_id = '$postId'";
+    $result = mysqli_query($koneksi, $query);
+    $row = mysqli_fetch_assoc($result);
+    if ($row['classify'] == 'nsfw'){
+        if (isset($_SESSION['level_id'])){
+            if ($_SESSION['level_id'] != 1){
+                header("Location: error/deniedpage.php");
+                exit();
+            }
+        }else{
+            header("Location: error/deniedpage.php");
+            exit();
+        }
+    }
+}
+
 // Memeriksa apakah pengguna sudah melaporkan postingan ini sebelumnya
 $isReported = false;
 if (isset($_SESSION['user_name']) && isset($_GET['post_id'])) {

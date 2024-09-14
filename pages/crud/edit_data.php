@@ -24,6 +24,7 @@ if (isset($_SESSION['level_id'])) {
                     $bio = $_POST['bio'];
                     $password = $_POST['password'];
                     $level_id = $_POST['level_id'];
+                    $to_suspend = $_POST['to_suspend'];
                     
                     // Ketika chatID kosong, maka set "0"
                     if (empty($_POST['chatID'])) {
@@ -49,7 +50,7 @@ if (isset($_SESSION['level_id'])) {
                     }
 
                     // Update data pengguna
-                    $queryUpdateUser = "UPDATE users SET user_name = '$user_name', name = '$name', user_bio = '$bio', password = '$password', level_id = '$level_id', tele_chat_id = $chatID WHERE user_id = $user_id";
+                    $queryUpdateUser = "UPDATE users SET user_name = '$user_name', name = '$name', user_bio = '$bio', password = '$password', level_id = '$level_id', to_suspend = '$to_suspend', tele_chat_id = $chatID WHERE user_id = $user_id";
                     $resultUpdateUser = mysqli_query($koneksi, $queryUpdateUser);
 
                     // ambil data terbaru dari pengguna tersebut
@@ -63,6 +64,7 @@ if (isset($_SESSION['level_id'])) {
                     $new_level = $newData['level_id'];
                     $new_chatID = $newData['tele_chat_id'];
                     $new_password = $newData['password'];
+                    $new_to_suspend = $newData['to_suspend'];
 
                     $message = "*Data%20anda%20telah%20diperbaharui%20oleh%20Admin!*%0A%0AUsername:%20$new_user_name%0APassword:%20$new_password%0ALevel:%20$new_level%0AChat%20ID:%20$new_chatID.";
 
@@ -173,6 +175,11 @@ if (isset($_SESSION['level_id'])) {
                                         <option value="1" <?php if ($userData['level_id'] == 1) echo 'selected'; ?>>Admin</option>
                                         <option value="2" <?php if ($userData['level_id'] == 2) echo 'selected'; ?>>User</option>
                                     </select>
+                                </div>
+                                <!-- Sisa untuk di suspend -->
+                                <div class="form_group">
+                                    <label for="to_suspend">Sisa untuk di tangguhkan</label>
+                                    <input type="number" name="to_suspend" value="<?php echo $userData['to_suspend']; ?>">
                                 </div>
                                 <div class="form_group">
                                     <label for="chatID">Chat ID</label>

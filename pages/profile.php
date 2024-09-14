@@ -107,6 +107,9 @@ if(isset($_GET['user_name'])) {
             if($_GET['pesan']=="success_block"){
                 echo "<div class='done'>Pergguna berhasil di batasi</div>";
             }
+            if($_GET['pesan']=="awokawok-ndableg"){
+                echo "<div class='alert'>Akun anda telah dibatasi karena telah melanggar <a href='terms.php'>ketentuan layanan kami</a>. Ndableg memang</div>";
+            }
         }
         ?>
         <!-- Profil Pengguna -->
@@ -192,6 +195,9 @@ if(isset($_GET['user_name'])) {
             <div class="gallery">
             <?php
             while($post = mysqli_fetch_assoc($getPostResult)){
+                if (($post['classify'] == 'nsfw') && ($_SESSION['level_id'] != 1)) {
+                    continue;
+                }else{
                 ?>
                 <div class="box">
                     <a href="<?php echo 'view_img.php?post_id=' . $post['post_id']; ?>">        
@@ -199,6 +205,7 @@ if(isset($_GET['user_name'])) {
                     </a>
                 </div>
                 <?php
+                }
             }
         }else{
             ?>
