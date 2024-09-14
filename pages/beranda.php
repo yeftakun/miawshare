@@ -33,6 +33,27 @@ $result = mysqli_query($koneksi, $query);
             <!-- Boxicons CSS -->
             <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
             <script src="../script/script.js" defer></script>
+            <style>
+                .blurred {
+                    filter: blur(25px); /* Membuat gambar blur */
+                    pointer-events: none; /* Agar tidak bisa di klik langsung */
+                }
+                .hide-icon {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: #fff;
+                    font-size: 24px;
+                    background-color: rgba(0, 0, 0, 0.3);
+                    padding: 10px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 2;
+                }
+            </style>
         </head>
     <body>
         <br>
@@ -55,31 +76,54 @@ $result = mysqli_query($koneksi, $query);
             <?php
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
-                    // Jika gambar terdeteksi NSFW, maka gambar tidak akan ditampilkan kecuali untuk admin
-                    if (($row['classify'] == 'nsfw') && ($_SESSION['level_id'] != 1)) {
-                        continue;
-                    }else{
-                    ?>
-                        <div class="box">
-                            <a href="<?php echo 'view_img.php?post_id=' . $row['post_id']; ?>">
-                                <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
-                                <div class="overlay">
-                                    <div class="overlay-content">
-                                        <div class="title"><?php echo $row['post_title']; ?></div>
-                                        <div class="user-info">
-                                            <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="Profile Picture">
-                                            <span><?php echo $row['user_name']; ?></span>
+                    // Jika gambar terdeteksi NSFW, maka gambar akan blur dan menampilkan ikon hide kecuali untuk admin
+                    if (($row['classify'] == 'nsfw')) {
+                        if ($_SESSION['level_id'] != 1){
+                            continue;
+                        }else{
+                        ?>
+                            <div class="box">
+                                <a href="<?php echo 'view_img.php?post_id=' . $row['post_id']; ?>">
+                                    <img class="blurred" src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
+                                    <div class="overlay">
+                                        <div class="overlay-content">
+                                            <div class="title"><?php echo $row['post_title']; ?></div>
+                                            <div class="user-info">
+                                                <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="Profile Picture">
+                                                <span><?php echo $row['user_name']; ?></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                    <?php
+                                    <div class="hide-icon">
+                                        <i class='bx bx-hide'></i>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php
+                        }
+                    } else {
+                        // Tampilan normal untuk gambar SFW atau admin
+                        ?>
+                            <div class="box">
+                                <a href="<?php echo 'view_img.php?post_id=' . $row['post_id']; ?>">
+                                    <img src="../storage/posting/<?php echo $row['post_img_path']; ?>" alt="<?php echo $row['post_title']; ?>">
+                                    <div class="overlay">
+                                        <div class="overlay-content">
+                                            <div class="title"><?php echo $row['post_title']; ?></div>
+                                            <div class="user-info">
+                                                <img src="../storage/profile/<?php echo $row['user_profile_path']; ?>" alt="Profile Picture">
+                                                <span><?php echo $row['user_name']; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php
                     }
                 }
             } else {
                 echo "Tidak ada data gambar.";
-            }
+            }            
             mysqli_free_result($result);
             mysqli_close($koneksi);
             ?>
