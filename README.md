@@ -29,6 +29,7 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - Regenerate OTP, hapus postingan, tambahkan/edit/hapus pengguna (Admin)
 - Backup gambar dan data
 - Fitur pelaporan gambar
+- [Deteksi gambar tidak pantas](https://github.com/yeftakun/nsfw_flask)
 - Pembatasan pengguna oleh admin
 
 ## Credit📜
