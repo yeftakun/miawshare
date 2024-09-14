@@ -30,7 +30,7 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - Backup gambar dan data
 - Fitur pelaporan gambar
 - [Deteksi gambar tidak pantas](https://github.com/yeftakun/nsfw_flask)
-- Pembatasan pengguna oleh admin
+- Pembatasan pengguna otomatis
 
 ## Credit📜
 
