@@ -29,6 +29,11 @@
     border: 1px solid #4CAF50;
 }
 
+a.alert a.done {
+    color: rgb(55, 180, 221);
+    text-decoration: none;
+}
+
 .alert, .done {
     /* Pastikan elemen mulai dengan opacity 0 */
     opacity: 0;
