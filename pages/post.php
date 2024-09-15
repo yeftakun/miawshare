@@ -160,6 +160,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 $updateQuery = "UPDATE posts SET classify = 'nsfw' WHERE post_img_path = '$filePath'";
                 mysqli_query($koneksi, $updateQuery);
 
+                // Report postingan
+
+                // ambil data post yang diupload dan username pengupload
+                $getPostData = "SELECT users.user_name, posts.post_id, posts.post_title
+                                FROM users
+                                INNER JOIN posts ON users.user_id = posts.user_id
+                                WHERE posts.post_img_path = '$filePath'";
+                $result = mysqli_query($koneksi, $getPostData);
+                $post = mysqli_fetch_assoc($result);
+
+                $user_name_reported = $post['user_name'];
+                $post_id_reported = $post['post_id'];
+                $post_reported = $post['post_title'];
+
+                $insertReportQuery = "INSERT INTO reports (user_name_reported, post_id_reported, post_reported, reason) VALUES ('$user_name_reported', $post_id_reported, '$post_reported', 'nsfw - auto')";
+                mysqli_query($koneksi, $insertReportQuery);
+                
                 // ketika to_suspend habis, status user menjadi Suspended
                 if($to_suspend <= 0){
                     $updateStatus = "UPDATE users SET status = 'Suspended' WHERE user_name = '$_SESSION[user_name]'";
