@@ -2,6 +2,109 @@
 
 session_start();
 include '../koneksi.php';
+include '../environment.php';
+$hostAPI = HOST_API;
+$hostMain = HOST_MAIN;
+
+// Start detection process
+function startDetectionProcess() {
+    global $koneksi, $hostAPI, $hostMain;
+
+    $query = "SELECT p.post_id, p.post_img_path, u.user_name, p.post_title, u.to_suspend 
+              FROM posts p 
+              INNER JOIN users u ON p.user_id = u.user_id
+              WHERE p.classify = 'pending'";
+    $result = mysqli_query($koneksi, $query);
+
+    $totalPosts = mysqli_num_rows($result);
+    if ($totalPosts === 0) {
+        echo "<script>alert('Semua postingan telah dideteksi!'); window.location.href = 'admin_panel.php';</script>";
+        exit;
+    }
+
+    $nsfwCount = 0;
+    $sfwCount = 0;
+    $processedCount = 0;
+
+    while ($post = mysqli_fetch_assoc($result)) {
+        $postId = $post['post_id'];
+        $postImgPath = $post['post_img_path'];
+        $userName = $post['user_name'];
+        $postTitle = $post['post_title'];
+        $filePath = $postImgPath;
+        $url = $hostAPI . '/classify';
+        $data = array('image_url' => $hostMain . '/storage/posting/' . $postImgPath);
+
+        $options = array(
+            'http' => array(
+                'header'  => "Content-Type: application/json\r\n",
+                'method'  => 'POST',
+                'content' => json_encode($data),
+            ),
+        );
+
+        $context  = stream_context_create($options);
+        $response = file_get_contents($url, false, $context);
+        $responseData = json_decode($response, true);
+
+        if ($responseData['predicted_class'] == 'nsfw') {
+            // Update post classify to nsfw
+            $updateQuery = "UPDATE posts SET classify = 'nsfw' WHERE post_img_path = '$filePath'";
+            mysqli_query($koneksi, $updateQuery);
+            
+            // cek apakah sudah direport
+            $queryReport = "SELECT * FROM reports WHERE post_id_reported = $postId";
+            $resultReport = mysqli_query($koneksi, $queryReport);
+            if (mysqli_num_rows($resultReport) > 0) {
+                continue;
+            }else{
+                // Insert report record
+                $insertReportQuery = "INSERT INTO reports (user_name_reported, post_id_reported, post_reported, reason) 
+                                      VALUES ('$userName', $postId, '$postTitle', 'nsfw - auto')";
+                mysqli_query($koneksi, $insertReportQuery);
+            }
+
+
+            // Decrement to_suspend and update user status if needed
+            $to_suspend = $post['to_suspend'] - 1;
+            $decrementCount = "UPDATE users SET to_suspend = $to_suspend WHERE user_name = '$userName'";
+            mysqli_query($koneksi, $decrementCount);
+
+            if ($to_suspend <= 0) {
+                $updateStatus = "UPDATE users SET status = 'Suspended' WHERE user_name = '$userName'";
+                mysqli_query($koneksi, $updateStatus);
+            }
+
+            $nsfwCount++;
+        } else {
+            // Update post classify to sfw
+            $updateQuery = "UPDATE posts SET classify = 'sfw' WHERE post_img_path = '$filePath'";
+            mysqli_query($koneksi, $updateQuery);
+
+            $sfwCount++;
+        }
+
+        // echo json_encode([
+        //     'progress' => $progress,
+        //     'completed' => $progress >= 100,
+        //     'nsfwCount' => $nsfwCount,
+        //     'sfwCount' => $sfwCount,
+        // ]);
+
+        // flush();
+        // ob_flush();
+        // usleep(500000); // Simulate time delay for processing
+    }
+
+    header('location:admin_panel.php?pesan=detected');
+    exit;
+    
+}
+
+// Handle the request
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    startDetectionProcess();
+}
 
 // query data level
 $queryLevel = "SELECT * FROM level";
@@ -114,6 +217,12 @@ if(isset($_SESSION['level_id'])) {
         form.clear-trash-form input[type="submit"]:hover {
             background-color: #cc0000; /* Warna latar belakang tombol saat dihover */
         }
+        #modal2 { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        #modal-content2 { background: #fff; padding: 20px; border-radius: 5px; text-align: center; position: relative; }
+        .spinner { border: 4px solid rgba(0, 0, 0, 0.1); border-left: 4px solid #007bff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #background-btn { position: absolute; top: 10px; right: 10px; background: #dc3545; color: #fff; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+        #background-btn:hover { background: #c82333; }
     </style>
 </head>
 <body>
@@ -132,14 +241,13 @@ if(isset($_SESSION['level_id'])) {
     </div>
 
     <br><br><br><br><br>
-    <div class="panel-search-bar">
-        <form class="clear-trash-form" action="crud/delete_trash_file.php" method="post">
-            <input type="submit" name="clear_trash" value="Clear Trash">
-        </form>
-
-        <form action="" method="get">
-            <input type="text" name="search" id="searchData" placeholder="Cari" onkeyup="searchData(this.value)">
-        </form>
+    
+    <div id="modal2">
+        <div id="modal-content2">
+            <div class="spinner"></div>
+            <p>Sedang mendeteksi postingan, jangan reload halaman ini!</p>
+            <!-- <button id="background-btn" onclick="cancelDetection()"><i class='bx bx-window-close'></i></button> -->
+        </div>
     </div>
 
     <?php
@@ -156,10 +264,32 @@ if(isset($_SESSION['level_id'])) {
             echo "<div class='alert'>Chat ID sudah digunakan oleh pengguna lain.</div>";
         } else if($_GET['pesan'] == "trash_file_deleted") {
             echo "<div class='done'>File tidak berguna sudah dihapus.</div>";
+        } else if($_GET['pesan'] == "detected") {
+            echo "<div class='done'>Postingan telah selesai dideteksi.</div>";
         }
     }
     ?>
 
+    <div class="container">
+        <div class="table-container">
+            <div class="panel-search-bar">
+                <form class="clear-trash-form" action="crud/delete_trash_file.php" method="post">
+                    <input type="submit" name="clear_trash" value="Clear Trash">
+                </form>
+        
+                <form action="" method="get">
+                    <input type="text" name="search" id="searchData" placeholder="Cari" onkeyup="searchData(this.value)">
+                </form>
+            </div>
+            <?php
+            $queryPostsPending = "SELECT * FROM posts WHERE classify = 'pending'";
+            $resultPostsPending = mysqli_query($koneksi, $queryPostsPending);
+            $totalPostsPending = mysqli_num_rows($resultPostsPending);
+            ?>
+            <button class="btn" onclick="startDetection()">Mulai deteksi</button>
+            <p style="font-size: 16px; font-weight: bold;">Jumlah postingan pending: <?php echo $totalPostsPending; ?></p>
+        </div>
+    </div>
     <div class="container">
         <div id="levelSection" class="table-container">
             <h2>Level Table</h2>
@@ -466,6 +596,35 @@ if(isset($_SESSION['level_id'])) {
             });
         };
 
+    </script>
+    <script>
+        function startDetection() {
+            document.getElementById('modal2').style.display = 'flex';
+            fetch('admin_panel.php', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.completed) {
+                        document.getElementById('modal2').style.display = 'none';
+                        // alert('Postingan telah selesai dideteksi!');
+                    } else {
+                        // Handle progress update if needed
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('modal2').style.display = 'none';
+                });
+        }
+
+        function cancelDetection() {
+            document.getElementById('modal2').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('modal2')) {
+                event.preventDefault();
+            }
+        };
     </script>
 </body>
 </html>
