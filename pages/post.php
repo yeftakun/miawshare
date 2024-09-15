@@ -9,6 +9,7 @@ $token = TOKEN_BOT;
 $max_image_size = MAX_IMAGE_SIZE;
 $size_in_kb = $max_image_size / 1000;
 $errorMsg = '';
+$nsfw_detect = NSFW_DETECT;
 // dapatkan nama host nsfw api (host:port)
 $hostAPI = 'http://localhost:5000';
 $hostMain = 'http://localhost/miawshare';
@@ -108,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         
         
         //  Proses input data ke database
-        $insertQuery = "INSERT INTO posts (user_id, post_img_path, post_title, post_description) VALUES ('$user_id', '$filePath', '$post_title', '$post_description')";
+        $insertQuery = "INSERT INTO posts (user_id, post_img_path, post_title, classify, post_description) VALUES ('$user_id', '$filePath', '$post_title', 'pending', '$post_description')";
         // eksekusi query
         mysqli_query($koneksi, $insertQuery);
 
@@ -124,77 +125,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         
         // redirect ke beranda jika PostIDnya ditemukan
         // header("location:beranda.php?pesan=uploadsuccess");
-        
-        // Cek NSFW API
-        $url = $hostAPI . '/classify';
-        $data = array('image_url' => $hostMain . '/storage/posting/' . $filePath);
-
-        $options = array(
-            'http' => array(
-            'header'  => "Content-Type: application/json\r\n",
-            'method'  => 'POST',
-            'content' => json_encode($data),
-            ),
-        );
-
-        $context  = stream_context_create($options);
-        $response = file_get_contents($url, false, $context);
-
-        if ($response === false) {
-            // update classify post menjadi pending
-            $updateQuery = "UPDATE posts SET classify = 'pending' WHERE post_img_path = '$filePath'";
-            mysqli_query($koneksi, $updateQuery);
-        }else{
-            $responseData = json_decode($response, true);
-            if($responseData['predicted_class'] == 'nsfw'){
-                $getCountSuspend = "SELECT to_suspend FROM users WHERE user_name = '$_SESSION[user_name]'";
-                $result = mysqli_query($koneksi, $getCountSuspend);
-                $user = mysqli_fetch_assoc($result);
-                $to_suspend = $user['to_suspend'];
-                // decrement to_suspend
-                $to_suspend--;
-                $decrementCount = "UPDATE users SET to_suspend = $to_suspend WHERE user_name = '$_SESSION[user_name]'";
-                mysqli_query($koneksi, $decrementCount);
-
-                // update classify post menjadi nsfw
-                $updateQuery = "UPDATE posts SET classify = 'nsfw' WHERE post_img_path = '$filePath'";
+        if ($nsfw_detect == 1){
+            // Cek NSFW API
+            $url = $hostAPI . '/classify';
+            $data = array('image_url' => $hostMain . '/storage/posting/' . $filePath);
+    
+            $options = array(
+                'http' => array(
+                'header'  => "Content-Type: application/json\r\n",
+                'method'  => 'POST',
+                'content' => json_encode($data),
+                ),
+            );
+    
+            $context  = stream_context_create($options);
+            $response = file_get_contents($url, false, $context);
+    
+            if ($response === false) {
+                // update classify post menjadi pending
+                $updateQuery = "UPDATE posts SET classify = 'pending' WHERE post_img_path = '$filePath'";
                 mysqli_query($koneksi, $updateQuery);
-
-                // Report postingan
-
-                // ambil data post yang diupload dan username pengupload
-                $getPostData = "SELECT users.user_name, posts.post_id, posts.post_title
-                                FROM users
-                                INNER JOIN posts ON users.user_id = posts.user_id
-                                WHERE posts.post_img_path = '$filePath'";
-                $result = mysqli_query($koneksi, $getPostData);
-                $post = mysqli_fetch_assoc($result);
-
-                $user_name_reported = $post['user_name'];
-                $post_id_reported = $post['post_id'];
-                $post_reported = $post['post_title'];
-
-                $insertReportQuery = "INSERT INTO reports (user_name_reported, post_id_reported, post_reported, reason) VALUES ('$user_name_reported', $post_id_reported, '$post_reported', 'nsfw - auto')";
-                mysqli_query($koneksi, $insertReportQuery);
-                
-                // ketika to_suspend habis, status user menjadi Suspended
-                if($to_suspend <= 0){
-                    $updateStatus = "UPDATE users SET status = 'Suspended' WHERE user_name = '$_SESSION[user_name]'";
-                    mysqli_query($koneksi, $updateStatus);
-                    header("location:profile.php?user_name=" . $_SESSION['user_name'] . "&pesan=awokawok-ndableg");
-                    exit();
-                }else{
-                    // redirect ke beranda
-                    header("location:beranda.php?pesan=nsfw");
-                }
-
             }else{
-                // update classify post menjadi sfw
-                $updateQuery = "UPDATE posts SET classify = 'sfw' WHERE post_img_path = '$filePath'";
-                mysqli_query($koneksi, $updateQuery);
-                // redirect ke beranda
-                header("location:beranda.php?pesan=uploadsuccess");
+                $responseData = json_decode($response, true);
+                if($responseData['predicted_class'] == 'nsfw'){
+                    $getCountSuspend = "SELECT to_suspend FROM users WHERE user_name = '$_SESSION[user_name]'";
+                    $result = mysqli_query($koneksi, $getCountSuspend);
+                    $user = mysqli_fetch_assoc($result);
+                    $to_suspend = $user['to_suspend'];
+                    // decrement to_suspend
+                    $to_suspend--;
+                    $decrementCount = "UPDATE users SET to_suspend = $to_suspend WHERE user_name = '$_SESSION[user_name]'";
+                    mysqli_query($koneksi, $decrementCount);
+    
+                    // update classify post menjadi nsfw
+                    $updateQuery = "UPDATE posts SET classify = 'nsfw' WHERE post_img_path = '$filePath'";
+                    mysqli_query($koneksi, $updateQuery);
+    
+                    // Report postingan
+    
+                    // ambil data post yang diupload dan username pengupload
+                    $getPostData = "SELECT users.user_name, posts.post_id, posts.post_title
+                                    FROM users
+                                    INNER JOIN posts ON users.user_id = posts.user_id
+                                    WHERE posts.post_img_path = '$filePath'";
+                    $result = mysqli_query($koneksi, $getPostData);
+                    $post = mysqli_fetch_assoc($result);
+    
+                    $user_name_reported = $post['user_name'];
+                    $post_id_reported = $post['post_id'];
+                    $post_reported = $post['post_title'];
+    
+                    $insertReportQuery = "INSERT INTO reports (user_name_reported, post_id_reported, post_reported, reason) VALUES ('$user_name_reported', $post_id_reported, '$post_reported', 'nsfw - auto')";
+                    mysqli_query($koneksi, $insertReportQuery);
+                    
+                    // ketika to_suspend habis, status user menjadi Suspended
+                    if($to_suspend <= 0){
+                        $updateStatus = "UPDATE users SET status = 'Suspended' WHERE user_name = '$_SESSION[user_name]'";
+                        mysqli_query($koneksi, $updateStatus);
+                        header("location:profile.php?user_name=" . $_SESSION['user_name'] . "&pesan=awokawok-ndableg");
+                        exit();
+                    }else{
+                        // redirect ke beranda
+                        header("location:beranda.php?pesan=nsfw");
+                    }
+    
+                }else{
+                    // update classify post menjadi sfw
+                    $updateQuery = "UPDATE posts SET classify = 'sfw' WHERE post_img_path = '$filePath'";
+                    mysqli_query($koneksi, $updateQuery);
+                    // redirect ke beranda
+                    header("location:beranda.php?pesan=uploadsuccess");
+                }
             }
+        }else{
+            header("location:beranda.php?pesan=uploadsuccess");
         }
 
         
