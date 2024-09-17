@@ -78,7 +78,7 @@ $result = mysqli_query($koneksi, $query);
                 while ($row = mysqli_fetch_assoc($result)) {
                     // Jika gambar terdeteksi NSFW, maka gambar akan blur dan menampilkan ikon hide kecuali untuk admin
                     if (($row['classify'] == 'nsfw')) {
-                        if ($_SESSION['level_id'] != 1){
+                        if (!isset($_SESSION['level_id']) || $_SESSION['level_id'] != 1){
                             continue;
                         }else{
                         ?>
