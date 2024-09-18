@@ -42,4 +42,4 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 
 ## Guide
 
-Panduan diperbaharui secara berkala sesuai kebutuhan. [Guide](https://github.com/yeftakun/miawshare/assets/guide.md)
+Panduan diperbaharui secara berkala sesuai kebutuhan. [Guide](https://github.com/yeftakun/miawshare/blob/master/assets/guide.md)
