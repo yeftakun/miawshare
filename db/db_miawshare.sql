@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3309
--- Generation Time: Sep 15, 2024 at 02:23 PM
+-- Generation Time: Sep 18, 2024 at 04:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -71,7 +71,8 @@ INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
 (50, 'yefta'),
 (54, 'admin'),
 (54, 'yefta'),
-(56, 'yefta');
+(56, 'yefta'),
+(176, 'admin');
 
 -- --------------------------------------------------------
 
@@ -123,7 +124,8 @@ INSERT INTO `posts` (`post_id`, `user_id`, `post_img_path`, `post_title`, `post_
 (56, 123, 'FB_IMG_1721570386958.jpg', 'Jawir?!', '', '', 'sfw', '2024-07-21 16:17:08'),
 (79, 127, 'migu gaming.jpeg', 'Migu Gaming', '#miku #gaming', '', 'sfw', '2024-07-27 11:18:09'),
 (82, 127, 'Keqing.600.3538467.jpg', 'Keqing', '#game #animegirl', '', 'sfw', '2024-07-27 12:23:47'),
-(85, 127, 'animegirl-purple-hair-yellow-eyes-catgirl-city-279171890.jpg', 'Cat Girl', '#animegirl', '', 'sfw', '2024-07-27 12:27:30');
+(85, 127, 'animegirl-purple-hair-yellow-eyes-catgirl-city-279171890.jpg', 'Cat Girl', '#animegirl', '', 'sfw', '2024-07-27 12:27:30'),
+(176, 123, 'IMG_20240913_171411_316.jpg', 'Shiroko icon', '', NULL, 'sfw', '2024-09-16 00:47:42');
 
 -- --------------------------------------------------------
 
@@ -201,8 +203,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`, `to_suspend`) VALUES
 (87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0', 3),
-(123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin', 2, '123', 'Suspended', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0', 3),
-(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '0', 3);
+(123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0', 2),
+(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '0', 2);
 
 --
 -- Indexes for dumped tables
@@ -292,13 +294,13 @@ ALTER TABLE `otp`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `tags`
