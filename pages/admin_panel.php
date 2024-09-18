@@ -223,6 +223,19 @@ if(isset($_SESSION['level_id'])) {
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #background-btn { position: absolute; top: 10px; right: 10px; background: #dc3545; color: #fff; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
         #background-btn:hover { background: #c82333; }
+
+        /* styleKonfigurasi */
+        .show-conf {
+            font-size: 16px;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -249,6 +262,7 @@ if(isset($_SESSION['level_id'])) {
             <!-- <button id="background-btn" onclick="cancelDetection()"><i class='bx bx-window-close'></i></button> -->
         </div>
     </div>
+    
 
     <?php
     if(isset($_GET['pesan'])) {
@@ -266,6 +280,8 @@ if(isset($_SESSION['level_id'])) {
             echo "<div class='done'>File tidak berguna sudah dihapus.</div>";
         } else if($_GET['pesan'] == "detected") {
             echo "<div class='done'>Postingan telah selesai dideteksi.</div>";
+        } else if($_GET['pesan'] == "reconfig") {
+            echo "<div class='done'>Konfigurasi berhasil diperbarui.</div>";
         }
     }
     ?>
@@ -281,13 +297,94 @@ if(isset($_SESSION['level_id'])) {
                     <input type="text" name="search" id="searchData" placeholder="Cari" onkeyup="searchData(this.value)">
                 </form>
             </div>
+            <hr>
             <?php
             $queryPostsPending = "SELECT * FROM posts WHERE classify = 'pending'";
             $resultPostsPending = mysqli_query($koneksi, $queryPostsPending);
             $totalPostsPending = mysqli_num_rows($resultPostsPending);
             ?>
+            <h2>Jumlah postingan pending: <?php echo $totalPostsPending; ?></h2>
             <button class="btn" onclick="startDetection()">Mulai deteksi</button>
-            <p style="font-size: 16px; font-weight: bold;">Jumlah postingan pending: <?php echo $totalPostsPending; ?></p>
+            <hr>
+            <h2>Konfigurasi Website</h2>
+            <?php
+            // jika data token bot ada di database (tdk null), tampilkan Available
+            if (TOKEN_BOT != null) {
+                echo "<p class='show-conf'>Token Bot: Available</p>";
+            } else {
+                echo "<p class='show-conf'>Token Bot: Not Available</p>";
+            } 
+            echo "<p class='show-conf'>Owner Chat ID: " . OWNER_CHAT_ID . "</p>";
+            echo "<p class='show-conf'>Host MiawShare: " . HOST_MAIN . "</p>";
+            echo "<p class='show-conf'>Host NSWF Detection API: " . HOST_API . "</p>";
+            // Jika nsfw_detect = 0, tampilkan false
+            if (NSFW_DETECT == 0) {
+                echo "<p class='show-conf'>NSFW Detection: False</p>";
+            } else {
+                echo "<p class='show-conf'>NSFW Detection: True</p>";
+            }
+            echo "<p class='show-conf'>Max Image Size: " . MAX_IMAGE_SIZE . "</p>";
+            echo "<p class='show-conf'>Max PP Size: " . MAX_PROFILE_IMAGE_SIZE . "</p>";
+            echo "<p class='show-conf'>Limit Gambar ditampilkan (beranda): " . LIMIT_BERANDA . "</p>";
+            ?>
+            <button onclick="showUpdateModal()">Update</button>
+
+            <!-- Modal for updating configuration -->
+            <div id="updateModal" class="modal">
+                <div class="modal-content">
+                    <!-- <span class="close" onclick="closeUpdateModal()">&times;</span> -->
+                    <button onclick="closeUpdateModal()">Batal</button>
+                    <h2>Update Configuration</h2>
+                    <form id="updateForm" action="crud/update_config.php" method="post">
+                        <label for="tokenBot">Token Bot:</label>
+                        <input type="text" id="tokenBot" name="tokenBot" value="<?php echo TOKEN_BOT; ?>"><br>
+
+                        <label for="ownerChatId">Owner Chat ID:</label>
+                        <input type="text" id="ownerChatId" name="ownerChatId" value="<?php echo OWNER_CHAT_ID; ?>"><br>
+
+                        <label for="hostMain">Host MiawShare:</label>
+                        <input type="text" id="hostMain" name="hostMain" value="<?php echo HOST_MAIN; ?>"><br>
+
+                        <label for="hostAPI">Host NSWF Detection API:</label>
+                        <input type="text" id="hostAPI" name="hostAPI" value="<?php echo HOST_API; ?>"><br>
+
+                        <label for="nsfwDetect">NSFW Detection:</label>
+                        <select id="nsfwDetect" name="nsfwDetect">
+                            <option value="1" <?php echo (NSFW_DETECT == 1) ? 'selected' : ''; ?>>True</option>
+                            <option value="0" <?php echo (NSFW_DETECT == 0) ? 'selected' : ''; ?>>False</option>
+                        </select><br>
+
+                        <label for="maxImageSize">Max Image Size:</label>
+                        <input type="text" id="maxImageSize" name="maxImageSize" value="<?php echo MAX_IMAGE_SIZE; ?>"><br>
+
+                        <label for="maxProfileImageSize">Max PP Size:</label>
+                        <input type="text" id="maxProfileImageSize" name="maxProfileImageSize" value="<?php echo MAX_PROFILE_IMAGE_SIZE; ?>"><br>
+
+                        <label for="limitBeranda">Limit Gambar ditampilkan (beranda):</label>
+                        <input type="text" id="limitBeranda" name="limitBeranda" value="<?php echo LIMIT_BERANDA; ?>"><br>
+
+
+                        <input type="submit" value="Update">
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                function showUpdateModal() {
+                    document.getElementById('updateModal').style.display = 'block';
+                }
+
+                function closeUpdateModal() {
+                    document.getElementById('updateModal').style.display = 'none';
+                }
+
+                window.onclick = function(event) {
+                    var modal = document.getElementById('updateModal');
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                }
+            </script>
         </div>
     </div>
     <div class="container">
