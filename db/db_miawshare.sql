@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3309
--- Generation Time: Sep 18, 2024 at 04:43 AM
+-- Generation Time: Sep 18, 2024 at 07:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_miawshare`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `config`
+--
+
+CREATE TABLE `config` (
+  `token_bot` varchar(200) DEFAULT NULL,
+  `owner_chat_id` varchar(20) DEFAULT NULL,
+  `img_size` int(11) NOT NULL DEFAULT 1024000,
+  `profile_size` int(11) NOT NULL DEFAULT 1024000,
+  `limit_beranda` int(11) NOT NULL DEFAULT 30,
+  `nsfw_detect` tinyint(1) NOT NULL DEFAULT 0,
+  `host_main` varchar(200) NOT NULL DEFAULT 'http://localhost/miawshare',
+  `host_api` varchar(200) DEFAULT 'http://localhost:5000'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `config`
+--
+
+INSERT INTO `config` (`token_bot`, `owner_chat_id`, `img_size`, `profile_size`, `limit_beranda`, `nsfw_detect`, `host_main`, `host_api`) VALUES
+('6906279097:AAGdApVCVqDEJ9q6Ybc3Kh-0-afK5FOb-L8', '1627790263', 1024000, 1024000, 50, 1, 'http://localhost/miawshare', 'http://localhost:5000');
 
 -- --------------------------------------------------------
 
