@@ -43,7 +43,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`token_bot`, `owner_chat_id`, `img_size`, `profile_size`, `limit_beranda`, `nsfw_detect`, `host_main`, `host_api`) VALUES
-('6906279097:AAGdApVCVqDEJ9q6Ybc3Kh-0-afK5FOb-L8', '1627790263', 1024000, 1024000, 50, 1, 'http://localhost/miawshare', 'http://localhost:5000');
+('1010101010:xxxxx-xx-xxxx-x', 'xxxxx', 1024000, 1024000, 50, 1, 'http://localhost/miawshare', 'http://localhost:5000');
 
 -- --------------------------------------------------------
 
