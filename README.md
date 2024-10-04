@@ -8,7 +8,7 @@ Dikembangkan untuk memenuhi tugas mata kuliah pemrograman web.
 
 ## Aboutℹ️
 
-MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan gambar menarik. Dengan platform kami yang ramah pengguna, anda dapat dengan mudah menjelajahi berbagai ilustrasi oleh pengguna kami. Kami membangun MiawShare dengan tujuan untuk menciptakan komunitas yang inklusif dan mendukung, di mana setiap orang dapat bebas berbagi gambarnya.
+MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan gambar menarik. Dengan platform kami yang ramah pengguna, anda dapat dengan mudah menjelajahi berbagai ilustrasi oleh pengguna kami. Kami membangun MiawShare dengan tujuan untuk menciptakan komunitas yang inklusif dan mendukung, di mana setiap orang dapat bebas membagikan gambarnya.
 
 ## Tools💻
 
