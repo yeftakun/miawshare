@@ -122,11 +122,12 @@ if ($count > 0) {
                             $userData = mysqli_fetch_assoc($resultGetUser);
                             $chatID = $userData['tele_chat_id'];
                             $name = $userData['name'];
+                            $name = str_replace(' ', '%20', $name);
 
                             // Membuat OTP 6 digit acak
                             $otp = mt_rand(100000, 999999);
 
-                            $telegramAPIOTP = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=Halo,%20$name!.%0AKode%20OTP%20anda%20adalah:%20`$otp`";
+                            $telegramAPIOTP = "https://api.telegram.org/bot$token/sendMessage?parse_mode=markdown&chat_id=$chatID&text=Halo,%20*$name*!.%0AKode%20OTP%20baru%20anda%20adalah:%20`$otp`";
                             // Mengirimkan OTP ke pengguna melalui Telegram
                             $ch = curl_init();
                             // Set opsi cURL
