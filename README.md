@@ -30,7 +30,7 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - Backup gambar dan data
 - Fitur pelaporan gambar
 - [Deteksi gambar tidak pantas](https://github.com/yeftakun/nsfw_flask)
-- Pembatasan pengguna otomatis
+- Skor kredit dan pembatasan pengguna
 
 ## Credit📜
 
@@ -38,9 +38,8 @@ MiawShare adalah platform komunitas online untuk berbagi karya, ide kreatif, dan
 - Gambar tambahan: [Forbiden Page](https://tenor.com/j5llAKTW5xF.gif) | [Not Found](https://tenor.com/usTAOkJQpDE.gif) | [Bye-bye](https://tenor.com/uzAzw3pnkQ7.gif) | [Default Profile](http://opening.download/view.php?pic=https://i.pinimg.com/474x/94/cb/68/94cb68baea50bb98cdab65b74e731c1c.jpg)
 - Icon yang digunakan: [Boxicons](https://boxicons.com/)
 - Referensi: [Pinterest](https://www.pinterest.com/) | [Pixiv](https://www.pixiv.net/en/)
-- Hosting: [IdCloudHost](https://my.idcloudhost.com/clientarea.php)
 - Our team: [Yefta Asyel](https://github.com/yeftakun/) (Backend) | [Andro Lay](https://github.com/AndroLay/) (Frontend) | [Ryan Manganguwi](https://github.com/RyanManganguwi/) (Design & Frontend) | [Aulia Nurhaliza](https://github.com/AuliaNurhaliza/) (Frontend)
 
 ## Guide
 
-Panduan diperbaharui secara berkala sesuai kebutuhan. [Guide](https://github.com/yeftakun/miawshare/issues/2)
+Panduan diperbaharui secara berkala sesuai kebutuhan. [Guide](https://github.com/yeftakun/miawshare/blob/master/assets/guide.md)
