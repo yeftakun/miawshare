@@ -3,7 +3,7 @@
 Di bawah ini adalah panduan untuk berbagai fitur dan proses dalam sistem. Panduan ini akan diperbarui secara berkala sesuai kebutuhan.
 
 ---
-
+<!--
 ### > Akun Sample
 Berikut akun yang sudah tersedia di database:
 
@@ -12,6 +12,8 @@ Berikut akun yang sudah tersedia di database:
 | admin    | 123      | 1 (Admin) |
 | yefta    | 123      | 2 (User)  |
 | bocchi   | 123      | 2 (User)  |
+
+-->
 
 ### > Pembuatan Akun
 Akun user yang kami (admin) buat masih belum bisa menerima notifikasi karena kami belum menyertakan Chat Id telegram dari pengguna. Namun status dari akun tersebut sudah aktif dan siap digunakan.
