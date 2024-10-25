@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3309
--- Generation Time: Sep 18, 2024 at 07:08 AM
+-- Generation Time: Oct 25, 2024 at 04:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`token_bot`, `owner_chat_id`, `img_size`, `profile_size`, `limit_beranda`, `nsfw_detect`, `host_main`, `host_api`) VALUES
-('1010101010:xxxxx-xx-xxxx-x', 'xxxxx', 1024000, 1024000, 50, 1, 'http://localhost/miawshare', 'http://localhost:5000');
+('6906279097:AAGdApVCVqDEJ9q6Ybc3Kh-0-afK5FOb-L8', '1627790263', 1024000, 1024000, 50, 0, 'http://localhost/miawshare', 'http://localhost:5000');
 
 -- --------------------------------------------------------
 
@@ -96,7 +96,12 @@ INSERT INTO `likes` (`liked_post_id`, `liked_user_name`) VALUES
 (54, 'admin'),
 (54, 'yefta'),
 (56, 'yefta'),
-(176, 'admin');
+(79, 'yefta'),
+(85, 'yefta'),
+(176, 'admin'),
+(176, 'yefta'),
+(185, 'bocchi'),
+(185, 'yefta');
 
 -- --------------------------------------------------------
 
@@ -149,7 +154,9 @@ INSERT INTO `posts` (`post_id`, `user_id`, `post_img_path`, `post_title`, `post_
 (79, 127, 'migu gaming.jpeg', 'Migu Gaming', '#miku #gaming', '', 'sfw', '2024-07-27 11:18:09'),
 (82, 127, 'Keqing.600.3538467.jpg', 'Keqing', '#game #animegirl', '', 'sfw', '2024-07-27 12:23:47'),
 (85, 127, 'animegirl-purple-hair-yellow-eyes-catgirl-city-279171890.jpg', 'Cat Girl', '#animegirl', '', 'sfw', '2024-07-27 12:27:30'),
-(176, 123, 'IMG_20240913_171411_316.jpg', 'Shiroko icon', '', NULL, 'sfw', '2024-09-16 00:47:42');
+(176, 123, 'IMG_20240913_171411_316.jpg', 'Shiroko icon', '', NULL, 'sfw', '2024-09-16 00:47:42'),
+(184, 123, 'Confused-scared-anime-girl-meme-10.jpg', 'Halo guys (ceritanya judul)', '#tag_cuma_gimmick', NULL, 'sfw', '2024-09-18 05:51:50'),
+(185, 123, 'download (2).jpeg', 'Uwuuuu', '', NULL, 'sfw', '2024-10-13 14:36:32');
 
 -- --------------------------------------------------------
 
@@ -227,8 +234,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_name`, `name`, `user_profile_path`, `user_bio`, `level_id`, `password`, `status`, `create_in`, `delete_in`, `tele_chat_id`, `to_suspend`) VALUES
 (87, 'admin', 'Admin', 'admin-1.jpg', 'Ini akun admin', 1, '123', 'Aktif', '2024-06-07 06:39:18', '2024-06-07 06:42:18', '0', 3),
-(123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0', 2),
-(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '0', 2);
+(123, 'yefta', 'Yefta Asyel', 'yefta.jpg', 'Admin MiawShare', 2, '123', 'Aktif', '2024-06-09 09:58:30', '2024-06-09 10:01:30', '0', 3),
+(127, 'bocchi', 'Hitori Gotou', 'bocchi.jpg', 'Guitar Hero🎸', 2, '123', 'Aktif', '2024-07-24 00:02:39', '2024-07-24 00:05:39', '0', 3);
 
 --
 -- Indexes for dumped tables
@@ -312,19 +319,19 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT for table `otp`
 --
 ALTER TABLE `otp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -336,7 +343,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- Constraints for dumped tables
