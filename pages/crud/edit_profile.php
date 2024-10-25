@@ -31,6 +31,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
         $user_bio = $_POST['user_bio'];
 
+        if ($_SESSION['username'] != $username){
+            // Periksa apakah username sudah digunakan oleh pengguna lain
+            $queryCheckUsername = "SELECT user_id FROM users WHERE user_name = '$username' AND user_id != " . $_SESSION['user_id'];
+            $resultCheckUsername = mysqli_query($koneksi, $queryCheckUsername);
+            if (mysqli_num_rows($resultCheckUsername) > 0) {
+                header("location:edit_profile.php?pesan=username_alreadyexist");
+                exit();
+            }
+        }
+
         // Memeriksa apakah ada file yang diupload
         if ($_FILES['image']['name']) {
             // Inisialisasi direktori dan nama file default
@@ -267,6 +277,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             if($_GET['pesan']=="invalidconfirmation"){
                 echo "<div class='alert'>Konfirmasi tidak sesuai</div>";
+            }
+            if($_GET['pesan']=="username_alreadyexist"){
+                echo "<div class='alert'>Username sudah digunakan oleh pengguna lain</div>";
             }
         }
         ?>
