@@ -6,6 +6,12 @@ include '../environment.php';
 $hostAPI = HOST_API;
 $hostMain = HOST_MAIN;
 
+// Fungsi untuk mengambil data konfigurasi dari file .env untuk izin deteksi
+$queryConfig = "SELECT * FROM config";
+$resultConfig = mysqli_query($koneksi, $queryConfig);
+// ambil nilai kolom nsfw_detect
+$nsfw_detect = mysqli_fetch_assoc($resultConfig)['nsfw_detect'];
+
 // Start detection process
 function startDetectionProcess() {
     global $koneksi, $hostAPI, $hostMain;
@@ -13,7 +19,7 @@ function startDetectionProcess() {
     $query = "SELECT p.post_id, p.post_img_path, u.user_name, p.post_title, u.to_suspend 
               FROM posts p 
               INNER JOIN users u ON p.user_id = u.user_id
-              WHERE p.classify = 'pending'";
+              WHERE p.classify IN ('pending', 'error')";
     $result = mysqli_query($koneksi, $query);
 
     $totalPosts = mysqli_num_rows($result);
@@ -76,12 +82,16 @@ function startDetectionProcess() {
             }
 
             $nsfwCount++;
-        } else {
+        } else if ($responseData['predicted_class'] == 'sfw') {
             // Update post classify to sfw
             $updateQuery = "UPDATE posts SET classify = 'sfw' WHERE post_img_path = '$filePath'";
             mysqli_query($koneksi, $updateQuery);
 
             $sfwCount++;
+        } else {
+            // Update post classify to error
+            $updateQuery = "UPDATE posts SET classify = 'error' WHERE post_img_path = '$filePath'";
+            mysqli_query($koneksi, $updateQuery);
         }
 
         // echo json_encode([
@@ -102,7 +112,7 @@ function startDetectionProcess() {
 }
 
 // Handle the request
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $nsfw_detect == 1) {
     startDetectionProcess();
 }
 
@@ -282,6 +292,8 @@ if(isset($_SESSION['level_id'])) {
             echo "<div class='done'>Postingan telah selesai dideteksi.</div>";
         } else if($_GET['pesan'] == "reconfig") {
             echo "<div class='done'>Konfigurasi berhasil diperbarui.</div>";
+        } else if($_GET['pesan'] == "error_detect") {
+            echo "<div class='alert'>Postingan tidak bisa dideteksi.</div>";
         }
     }
     ?>
@@ -299,11 +311,11 @@ if(isset($_SESSION['level_id'])) {
             </div>
             <hr>
             <?php
-            $queryPostsPending = "SELECT * FROM posts WHERE classify = 'pending'";
+            $queryPostsPending = "SELECT * FROM posts WHERE classify IN ('pending', 'error')";
             $resultPostsPending = mysqli_query($koneksi, $queryPostsPending);
             $totalPostsPending = mysqli_num_rows($resultPostsPending);
             ?>
-            <h2>Jumlah postingan pending: <?php echo $totalPostsPending; ?></h2>
+            <h2>Jumlah postingan belum dideteksi: <?php echo $totalPostsPending; ?></h2>
             <button class="btn" onclick="startDetection()">Mulai deteksi</button>
             <hr>
             <h2>Konfigurasi Website</h2>
